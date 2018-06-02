@@ -1,3 +1,13 @@
+/*
+Copyright (c) 2018, Capacloud Trading Solutions Private Limited
+
+Author: Sonam Tenzin
+<sonamten@iitk.ac.in>
+
+This file is governed under the terms of GPL V3 or later. Please find the
+detailed license terms in the file titled 'License'.
+*/
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
