@@ -1,0 +1,31 @@
+biswarup@capacloud.com
+
+n=200
+Av = 0.11 lps
+v = 0.97 m/s
+v^2/2*g = 0.047 head loss (si unit)
+
+n=18
+Av = 0.01 lps
+v=0.088 m/s
+v^2/2*g= 0.000391 si unit head loss
+
+n=1960
+Av=1.08 lps
+v=9.55 m/s
+v^2/2*g= 4.56
+
+n=2000
+Av=1.11 lps d=12mm
+v=9.83 mps
+v^2/2g = 4.83 si unit head loss
+
+n=2000
+Av=1.11 lps d=25mm
+v=2.26 mps
+v^2/2g = 0.26 si unit head loss
+
+n=4000
+Av=2.22 lps d=25mm
+v=4.53 mps
+v^2/2g = 1.03 si
