@@ -52,6 +52,9 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var wi = lateralL, hi = mainL;
     var g=10, rho=1000, C=150;
     //var walls=1;
+
+    
+
     lateralL=28;
 
     var orificeN = Math.floor(lateralL*12/5.5);
