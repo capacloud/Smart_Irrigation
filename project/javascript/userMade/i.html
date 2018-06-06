@@ -136,7 +136,7 @@
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
-							tempPX= notsubMainV*rho*g*0.000145;
+							tempPX= kineticT*rho*g*0.000145;
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
 							kineticH=0;
@@ -195,7 +195,7 @@
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
-							tempPX= notsubMainV*rho*g*0.000145;
+							tempPX= kineticT*rho*g*0.000145;
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
 							kineticH=0;
 							yloss=0;
@@ -255,7 +255,7 @@
 							xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
-							tempPX= notsubMainV*rho*g*0.000145;
+							tempPX= kineticT*rho*g*0.000145;
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
 							kineticH=0;
@@ -285,7 +285,7 @@
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
-							tempPX= notsubMainV*rho*g*0.000145;
+							tempPX= kineticT*rho*g*0.000145;
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
 							kineticH=0;
@@ -607,6 +607,7 @@
 		var mainQ = lateralQ*lateralN*1000*60;  // lpm
 		var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
 		var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+		console.log("not submain V: "+notsubMainV);
 		console.log("mainQ (lpm):" + mainQ);
 
     	var smallD = lateralD-0.001;
@@ -632,6 +633,8 @@
 		console.log("change in pressure caused in lateral (psi): "+ pressureChange);
 		var kineticT = Math.pow(notsubMainV,2)/(2*g);
 		var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+		console.log("not subain v loss: "+notsubMainVloss);
+		console.log("kineticT: "+kineticT*rho*g*0.000145);
 		//console.log("kineticH :" + kineticH);
     	var mainVloss = lateralQ*4/(3.14*mainD*mainD);
 		console.log("pressureChange :"+pressureChange);
