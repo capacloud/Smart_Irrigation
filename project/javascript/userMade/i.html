@@ -10,7 +10,7 @@
 
 	<script type="text/javascript">
 
-		function main(container, pressureChange, wi, hi, mainV, mainVloss,walls )
+		function main(container, pressureChange, wi, hi, mainV, mainVloss,walls, notsubMainV, notsubMainVloss)
 		{
 			if (!mxClient.isBrowserSupported())
 			{
@@ -52,6 +52,8 @@
           			var yloss =0;
           			var tempPY=0;
           			var kineticH=0;
+					var kineticT=0;
+					var tempPX=0;
 					//console.log(width+","+height);
 
                     var n56 = Math.floor((wi-28)/56);
@@ -64,6 +66,7 @@
 					var lastArr=[];
 					var tempLastMain;
 					var initialMainV=mainV;
+					var initialnotsubMainV=notsubMainV;
 					//adjacent walls
 					var screenFilter = 1;
 					var venturiAssembly = 1;
@@ -103,7 +106,7 @@
                             lessN56 = Math.floor((wi%28)*12/5.5);
                         }
                         for(var k=0; k<height; k++){  //first set of emitter column
-                            tempEmit = graph.insertVertex(parent, null, '',xEmit, yEmit, 200, 20, 'fillColor=white');
+                            tempEmit = graph.insertVertex(parent, null, pressureChange,xEmit, yEmit, 200, 20, 'fillColor=white');
                             lastArr.push(tempEmit);
                             yEmit+=54;
                         }
@@ -131,14 +134,26 @@
                         xMain=xEmit+40;
                         for(var k=0; k<tN56; k++){		//56 feet sets
                             xMain=xEmit+40;
-                            tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 200, 20, 'fillColor=green');
+							kineticT = Math.pow(notsubMainV,2)/(2*g);
+							notsubMainV-=notsubMainVloss;
+							tempPX= notsubMainV*rho*g*0.000145;
+                            tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
+							kineticH=0;
+							yloss=0;
+							tempPY=0;
+							mainV=initialMainV;
                             //xMain+=20;
                             xSub = xMain;
                             ySub = yMain+30;
                             prevSub = tempMain;
                             for(var i=0; i<height; i++){
-                                tempSub = graph.insertVertex(parent, null, '', xSub, ySub, 200, 20, 'fillColor=grey');
+								kineticH= Math.pow(mainV,2)/(2*g);
+	    			            yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+	    			            tempPY=yloss*rho*g*0.000145;
+	    								//console.log(i+':'+tempPY+','+mainV);
+	    			            mainV-=mainVloss;
+                                tempSub = graph.insertVertex(parent, null, tempPY,xSub, ySub, 200, 20, 'fillColor=grey');
                                 graph.insertEdge(parent, null, '', lastArr[i], tempSub);
                                 graph.insertEdge(parent, null, '', prevSub, tempSub);
                                 prevSub = tempSub;
@@ -155,7 +170,7 @@
                                 yEmit = ySub;
                                 if(i==emitterPer56/2){
                                     for(var j=0; j<height; j++){
-                                        tempEmit = graph.insertVertex(parent, null, i+1, xEmit, yEmit, 200, 20, 'fillColor=white');
+                                        tempEmit = graph.insertVertex(parent, null,pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
                                         newlastArr.push(tempEmit);
                                         yEmit+=54;
@@ -178,12 +193,28 @@
                         }
                         if(Math.floor((wi-28)%56)>56){		//check for last submain
                             xMain=xEmit+40;
-                            tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 200, 20, 'fillColor=green');
+							kineticT = Math.pow(notsubMainV,2)/(2*g);
+							notsubMainV-=notsubMainVloss;
+							tempPX= notsubMainV*rho*g*0.000145;
+                            tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
+							kineticH=0;
+							yloss=0;
+							tempPY=0;
+							mainV=initialMainV;
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
+							kineticH=0;
+							yloss=0;
+							tempPY=0;
+							mainV=initialMainV;
                             xSub = xMain;
                             ySub = yMain+30;
                             prevSub = tempMain;
                             for(var i=0; i<height; i++){	//submain
+								kineticH= Math.pow(mainV,2)/(2*g);
+	    			            yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+	    			            tempPY=yloss*rho*g*0.000145;
+	    								//console.log(i+':'+tempPY+','+mainV);
+	    			            mainV-=mainVloss;
                                 tempSub = graph.insertVertex(parent, null, '', xSub, ySub, 200, 20, 'fillColor=grey');
                                 graph.insertEdge(parent, null, '', lastArr[i], tempSub);
                                 graph.insertEdge(parent, null, '', prevSub, tempSub);
@@ -202,7 +233,7 @@
                                 yEmit = ySub;
                                 if(i==width/2){
                                     for(var j=0; j<height; j++){
-                                        tempEmit = graph.insertVertex(parent, null, i+1, xEmit, yEmit, 200, 20, 'fillColor=white');
+                                        tempEmit = graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
                                         newlastArr.push(tempEmit);
                                         yEmit+=54;
@@ -222,12 +253,24 @@
                                 newlastArr=[];
                             }
 							xMain=xEmit+40;
-                            tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 200, 20, 'fillColor=green');
+							kineticT = Math.pow(notsubMainV,2)/(2*g);
+							notsubMainV-=notsubMainVloss;
+							tempPX= notsubMainV*rho*g*0.000145;
+                            tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
+							kineticH=0;
+							yloss=0;
+							tempPY=0;
+							mainV=initialMainV;
                             xSub = xMain;
                             ySub = yMain+30;
                             prevSub = tempMain;
                             for(var i=0; i<height; i++){		//extra last submain if width greate than 28'
+								kineticH= Math.pow(mainV,2)/(2*g);
+								yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+								tempPY=yloss*rho*g*0.000145;
+										//console.log(i+':'+tempPY+','+mainV);
+								mainV-=mainVloss;
                                 tempSub = graph.insertVertex(parent, null, '', xSub, ySub, 200, 20, 'fillColor=grey');
                                 graph.insertEdge(parent, null, '', lastArr[i], tempSub);
                                 graph.insertEdge(parent, null, '', prevSub, tempSub);
@@ -240,13 +283,25 @@
                         }
                         else if(Math.floor((wi-28)%56)>=0){
                             xMain=xEmit+40;
-                            tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 200, 20, 'fillColor=green');
+							kineticT = Math.pow(notsubMainV,2)/(2*g);
+							notsubMainV-=notsubMainVloss;
+							tempPX= notsubMainV*rho*g*0.000145;
+                            tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
+							kineticH=0;
+							yloss=0;
+							tempPY=0;
+							mainV=initialMainV;
                             xSub = xMain;
                             ySub = yMain+30;
                             prevSub = tempMain;
                             for(var i=0; i<height; i++){
-                                tempSub = graph.insertVertex(parent, null, '', xSub, ySub, 200, 20, 'fillColor=grey');
+								kineticH= Math.pow(mainV,2)/(2*g);
+	    			            yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+	    			            tempPY=yloss*rho*g*0.000145;
+	    								//console.log(i+':'+tempPY+','+mainV);
+	    			            mainV-=mainVloss;
+                                tempSub = graph.insertVertex(parent, null, tempPY, xSub, ySub, 200, 20, 'fillColor=grey');
                                 graph.insertEdge(parent, null, '', lastArr[i], tempSub);
                                 graph.insertEdge(parent, null, '', prevSub, tempSub);
                                 prevSub = tempSub;
@@ -264,7 +319,7 @@
                                 yEmit = ySub;
                                 if(i==width/2){
                                     for(var j=0; j<height; j++){
-                                        tempEmit = graph.insertVertex(parent, null, i+1, xEmit, yEmit, 200, 20, 'fillColor=white');
+                                        tempEmit = graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
                                         newlastArr.push(tempEmit);
                                         yEmit+=54;
@@ -527,12 +582,12 @@
 <script>
 	function second(container){
     //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-		var lateralD=0.47, lateralL=145, orificeQ=4, mainL=2, mainD=0.62,walls=1;
+		var lateralD=16, lateralL=145, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
 		var wi = lateralL, hi = mainL;
 		var g=10, rho=1000, C=150;
-		lateralL=56; //calclulating for 28*x ft^2
+		lateralL=56; //calclulating for 56*x ft^2
 
-		var orificeN = lateralL*2;
+		var orificeN = Math.floor(lateralL*12/5.5);
 		var lateralQ = orificeN*orificeQ/(60*60);
 		console.log("orificeN :"+orificeN);
 		console.log("orificeQ :"+orificeQ);
@@ -540,24 +595,27 @@
 
 		mainL = mainL*0.0254*12;
 		lateralQ = lateralQ/1000;
-		lateralD=lateralD*0.0254; //cout << "lateralD :" << lateralD << endl;
+		lateralD=lateralD/1000; //cout << "lateralD :" << lateralD << endl;
+		notsubMainD=notsubMainD/1000;
 		lateralL=lateralL*0.0254*12;
-    mainD = mainD*0.0254;
-    var lateralV = lateralQ*4/(3.14*lateralD*lateralD);
+    	mainD = mainD/1000;
+    	var lateralV = lateralQ*4/(3.14*lateralD*lateralD);
 		var F1 = 0.63837*Math.pow(orificeN, -1.8916) + 0.35929;
 		var hf = 10.77*lateralL*(Math.pow((lateralQ/C),1.852))*Math.pow(lateralD,-4.865);
 		console.log("lateralQ :" +lateralQ);
-    var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
+    	var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
 		var mainQ = lateralQ*lateralN*1000*60;  // lpm
+		var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
+		var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
 		console.log("mainQ (lpm):" + mainQ);
 
-    var smallD = lateralD-0.001;
+    	var smallD = lateralD-0.001;
 
 		var squareS=0;
-	  for(var i=1; i<=orificeN; i++){
-	    squareS=squareS+Math.pow(i,1.852);
-	  }
-	  var F2=squareS/Math.pow(orificeN,2.852);
+	    for(var i=1; i<=orificeN; i++){
+	    	squareS=squareS+Math.pow(i,1.852);
+	    }
+	  	var F2=squareS/Math.pow(orificeN,2.852);
 		//console.log("F2 :" + F2);
 
 		var F3 = Math.pow((1.852+1),-1) + Math.pow(2*orificeN,-1) + Math.pow(1.852-1,0.5)/(6*Math.pow(orificeN,2));
@@ -566,18 +624,20 @@
 		var temp1 = Math.max(F1, F2);
 		temp1 = Math.max(temp1, F3);
 
-    var  k = 0.056*(Math.pow(lateralD/smallD,17.83)-1);
-    var hm =  k*(Math.pow(lateralV,2))/(2*g);
+	    var  k = 0.056*(Math.pow(lateralD/smallD,17.83)-1);
+	    var hm =  k*(Math.pow(lateralV,2))/(2*g);
 
 		var pressureChange = (hf+hm*orificeN)*g*rho*0.000145;
-    var kineticH = Math.pow(mainV,2)/(2*g);
+    	var kineticH = Math.pow(mainV,2)/(2*g);
 		console.log("change in pressure caused in lateral (psi): "+ pressureChange);
+		var kineticT = Math.pow(notsubMainV,2)/(2*g);
+		var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
 		//console.log("kineticH :" + kineticH);
-    var mainVloss = lateralQ*4/(3.14*mainD*mainD);
+    	var mainVloss = lateralQ*4/(3.14*mainD*mainD);
 		console.log("pressureChange :"+pressureChange);
 		console.log("mainV :" + mainV);
 		console.log("mainVloss :"+mainVloss);
-		return main(container, pressureChange, wi, hi, mainV, mainVloss,walls);
+		return main(container, pressureChange, wi, hi, mainV, mainVloss,walls,notsubMainV,notsubMainVloss);
 
 	}
 </script>
