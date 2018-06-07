@@ -24,11 +24,11 @@ app.use(express.static('htmlFiles'))    //try to improve??
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/htmlFiles/indexB.html');
+    res.sendFile(__dirname + '/htmlFiles/indexC.html');
 });
 
 app.get('/graph1', function(req, res){
-    res.render('appB',{
+    res.render('appC1',{
         width:width1,
         height:height1,
         nameP:nameP1,
@@ -49,7 +49,7 @@ app.get('/graph1', function(req, res){
 });
 
 app.get('/graph2', function(req, res){
-    res.render('appC',{
+    res.render('appC2',{
         width:width1,
         height:height1,
         nameP:nameP1,
