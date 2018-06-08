@@ -38,7 +38,7 @@
 				try
 				{
 					var g=10, rho=1000;
-					var v1 = graph.insertVertex(parent, null, '', 20, 20, 20, 20, 'fillColor=blue');
+					var v1 = graph.insertVertex(parent, null, '', 250, 20, 20, 20, 'fillColor=blue');
 					//var v2 = graph.insertVertex(parent, null, 'World!', 20, 150, 80, 30);
 					//var v3 = graph.insertVertex(parent, null, '', 200, 150, 80, 30);
 					//var v4 = graph.insertVertex(v2, null, '', 150, 20, 80, 30);
@@ -65,6 +65,9 @@
 					var kineticT=0;
 					var tempPX=0;
 					var xloss=0;
+					var maxXloss=0;
+					var maxYloss=0;
+					var maxpressureChange=0;
 					//console.log(width+","+height);
 
                     var n28 = Math.floor(wi/28);
@@ -72,7 +75,7 @@
 					//n28 = 3;
                     var tempMain=v1;
                     var prevMain=v1;
-                    var xMain = 20+100;
+                    var xMain = 20+100+250;
                     var yMain = 20;
 					var lastArr=[];
 					var tempLastMain;
@@ -111,6 +114,7 @@
 						//notsubMainV-=notsubMainVloss;
 						tempPX= kineticT*rho*g*0.000145;
 						xloss+=tempPX
+						maxXloss = Math.max(maxXloss, xloss);
 						tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
                         xSub = xMain;
                         ySub = yMain + 30;
@@ -133,6 +137,7 @@
     			            tempPY=yloss*rho*g*0.000145;
     								//console.log(i+':'+tempPY+','+mainV);
     			            mainV-=mainVloss;
+							maxYloss = Math.max(maxYloss, tempPY);
     						tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub,160,  20, 'fillColor=white')
     						xEmit= xSub+200;
     						yEmit= ySub;
@@ -143,6 +148,7 @@
     						for(var j=0; j<emitterPer28; j++){
 								emitter+=1;
 								if(j==emitterPer28-1){
+									maxpressureChange=Math.max(pressureChange, maxpressureChange);
     								tempEmit= graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
     								graph.insertEdge(parent, null, '', prevEmit, tempEmit);
 									lastArr.push(tempEmit);
@@ -163,6 +169,7 @@
 						tempPX= kineticT*rho*g*0.000145;
 						xloss+=tempPX
 						notsubMainV-=notsubMainVloss;
+						maxXloss = Math.max(maxXloss, xloss);
 						tempLastMain = graph.insertVertex(parent, null, xloss, xMain-350, yMain, 200, 20, 'fillColor=green');
 						xSub = xMain-300;
 						ySub = yMain + 30;
@@ -182,6 +189,7 @@
     			            tempPY=yloss*rho*g*0.000145;
     								//console.log(i+':'+tempPY+','+mainV);
     			            mainV-=mainVloss;
+							maxYloss = Math.max(maxYloss, tempPY);
 							tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub,160,  20, 'fillColor=white');
 							graph.insertEdge(parent, null, '', tempSub, lastArr[i]);
 							ySub+= 54;
@@ -195,7 +203,7 @@
                     }
 
 					width=Math.floor((wi%28)*12/5.5); //taking into account 5.5inch x 6 inch pockets
-
+					console.log("width is: "+width);
 					if(width>0){
 						for(var k=0; k<1; k++){
 							pvcPipe1+=(wi%28);
@@ -206,6 +214,7 @@
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							tempPX= kineticT*rho*g*0.000145;
 							xloss+=tempPX;
+							maxXloss = Math.max(maxXloss, xloss);
 	                        tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
 	                        xSub = xMain;
 	                        ySub = yMain + 30;
@@ -228,6 +237,7 @@
 	    			            tempPY=yloss*rho*g*0.000145;
 	    									//console.log(i+':'+tempPY+','+mainV);
 	    			            mainV-=mainVloss;
+								maxYloss = Math.max(maxYloss, tempPY);
 	    						tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub,160,  20, 'fillColor=white')
 	    						xEmit= xSub+200;
 	    						yEmit= ySub;
@@ -238,6 +248,7 @@
 	    						for(var j=0; j<width; j++){
 									emitter+=1;
 	    							if(j==width-1){
+										maxpressureChange=Math.max(pressureChange, maxpressureChange);
 	    								tempEmit= graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
 	    								graph.insertEdge(parent, null, '', prevEmit, tempEmit);
 										lastArr.push(tempEmit);
@@ -286,6 +297,11 @@
 
 	                    }
 					}
+					var totpressCha= maxXloss+maxYloss+maxpressureChange;
+					totpressCha+=totpressCha*15/100;
+					//totpressCha= Math.max(totpressCha,1);
+					graph.insertVertex(parent, null, totpressCha, 10,10,200,20);
+					console.log("net pressure change is: "+totpressCha);
 					if(wallType!='B'){
 						pvcElbow+=(walls-1);
 						pvcPipe1*=walls;

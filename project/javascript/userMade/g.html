@@ -587,7 +587,7 @@
 				function exportFile(format)
 				{
 					var bg = '#ffffff';
-					var scale = 1;
+					var scale = graph.view.scale;
 					var b = 1;
 
 					var imgExport = new mxImageExport();
@@ -601,16 +601,17 @@
 
 					// Renders graph. Offset will be multiplied with state's scale when painting state.
 					var xmlCanvas = new mxXmlCanvas2D(root);
-					xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
-					xmlCanvas.scale(scale / vs);
+					xmlCanvas.translate(Math.floor((b / scale - bounds.x) ), Math.floor((b / scale - bounds.y)));
+					xmlCanvas.scale(scale );
 
 					imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
 
 					// Puts request data together
-					var w = Math.ceil(bounds.width * scale / vs + 2 * b);
-					var h = Math.ceil(bounds.height * scale / vs + 2 * b);
+					var w = Math.ceil(bounds.width * scale + 2 );
+					var h = Math.ceil(bounds.height * scale  + 2 );
 
 					var xml = mxUtils.getXml(root);
+					console.log(encodeURIComponent(xml));
 
 					if (bg != null)
 					{
@@ -623,7 +624,7 @@
 				}
 				document.body.appendChild(mxUtils.button('Export PNG', function()
 				{
-					exportFile('pdf');
+					exportFile('png');
 				}));
 			}
 			/*
@@ -715,7 +716,7 @@
 <body onload="second(document.getElementById('graphContainer'))">
 
 	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:5000px;height:5000px;background:url('editors/images/grid.gif');cursor:default;">
+		style="position:relative;overflow:hidden;width:5000px;height:5000px;border:1px solid gray;cursor:default;">
 	</div>
 </body>
 </html>
