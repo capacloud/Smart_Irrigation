@@ -106,6 +106,8 @@
                             lessN56 = Math.floor((wi%28)*12/5.5);
                         }
                         for(var k=0; k<height; k++){  //first set of emitter column
+							emitter+=1;
+
                             tempEmit = graph.insertVertex(parent, null, pressureChange,xEmit, yEmit, 200, 20, 'fillColor=white');
                             lastArr.push(tempEmit);
                             yEmit+=54;
@@ -120,8 +122,13 @@
                                 for(var j=0; j<height; j++){
                                     //console.log("j is: "+j);
                                     //console.log(lastArr);
+									emitter+=1;
+
                                     tempEmit = graph.insertVertex(parent, null, i+1,xEmit, yEmit, 20, 20, 'fillColor=white');
-                                    graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
+									lateralPipe+=0.458;
+									pvcPipe1+=0.458;
+
+									graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
                                     newlastArr.push(tempEmit);
                                     yEmit+=54;
                                 }
@@ -137,6 +144,10 @@
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
 							tempPX= kineticT*rho*g*0.000145;
+							pvcT+=1;
+							pvcPipe1+=56;
+							
+
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
 							kineticH=0;
@@ -153,6 +164,10 @@
 	    			            tempPY=yloss*rho*g*0.000145;
 	    								//console.log(i+':'+tempPY+','+mainV);
 	    			            mainV-=mainVloss;
+								startConnector+=2;
+								grommet+=2;
+								inlineValve+=2;
+
                                 tempSub = graph.insertVertex(parent, null, tempPY,xSub, ySub, 200, 20, 'fillColor=grey');
                                 graph.insertEdge(parent, null, '', lastArr[i], tempSub);
                                 graph.insertEdge(parent, null, '', prevSub, tempSub);
@@ -227,7 +242,7 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-28)%56);
+                            width=Math.floor((wi-28)%56)*12/5.5;
                             for(var i=0; i<width; i++){		//emitter assignments
 								xEmit = xEmit+40;
                                 yEmit = ySub;
@@ -313,7 +328,7 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-28)%56);
+                            width=Math.floor((wi-28)%56)*12/5.5;
                             for(var i=0; i<width; i++){
 								xEmit = xEmit+40;
                                 yEmit = ySub;
@@ -582,7 +597,7 @@
 <script>
 	function second(container){
     //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-		var lateralD=16, lateralL=145, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
+		var lateralD=16, lateralL=84, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
 		var wi = lateralL, hi = mainL;
 		var g=10, rho=1000, C=150;
 		lateralL=56; //calclulating for 56*x ft^2

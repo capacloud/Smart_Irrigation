@@ -18,7 +18,7 @@
 		}
 
 
-		function main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow )
+		function main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow, notsubMainV,notsubMainVloss )
 		{
 			if (!mxClient.isBrowserSupported())
 			{
@@ -62,6 +62,9 @@
           			var yloss =0;
           			var tempPY=0;
           			var kineticH=0;
+					var kineticT=0;
+					var tempPX=0;
+					var xloss=0;
 					//console.log(width+","+height);
 
                     var n28 = Math.floor(wi/28);
@@ -103,13 +106,18 @@
 						pvcReducer+=2;
 						flushValve+=2;
 						//pvcControlValve+=2;
-                        tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 20, 20, 'fillColor=green');
+
+						kineticT = Math.pow(notsubMainV,2)/(2*g);
+						//notsubMainV-=notsubMainVloss;
+						tempPX= kineticT*rho*g*0.000145;
+						xloss+=tempPX
+						tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
                         xSub = xMain;
                         ySub = yMain + 30;
                         graph.insertEdge(parent, null, '',prevMain, tempMain);
                         prevSub = tempMain;
                         prevMain = tempMain;
-                        xMain+=3200;
+                        xMain+=3400;
 						kineticH=0;
 						yloss=0;
 						tempPY=0;
@@ -150,7 +158,12 @@
 
     						//xSub+= 24;
     					}
-						tempLastMain = graph.insertVertex(parent, null, '', xMain-200, yMain, 20, 20, 'fillColor=green');
+						kineticT = Math.pow(notsubMainV,2)/(2*g);
+						//notsubMainV-=notsubMainVloss;
+						tempPX= kineticT*rho*g*0.000145;
+						xloss+=tempPX
+						notsubMainV-=notsubMainVloss;
+						tempLastMain = graph.insertVertex(parent, null, xloss, xMain-350, yMain, 200, 20, 'fillColor=green');
 						xSub = xMain-300;
 						ySub = yMain + 30;
 						//xMain+=3000;
@@ -190,13 +203,16 @@
 							pvcReducer+=2;
 							flushValve+=2;
 							//pvcControlValve+=2;
-	                        tempMain = graph.insertVertex(parent, null, '', xMain, yMain, 20, 20, 'fillColor=green');
+							kineticT = Math.pow(notsubMainV,2)/(2*g);
+							tempPX= kineticT*rho*g*0.000145;
+							xloss+=tempPX;
+	                        tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
 	                        xSub = xMain;
 	                        ySub = yMain + 30;
 	                        graph.insertEdge(parent, null, '',prevMain, tempMain);
 	                        prevSub = tempMain;
 	                        prevMain = tempMain;
-	                        xMain+=3200;
+	                        xMain+=3400;
 							kineticH=0;
 							yloss=0;
 							tempPY=0;
@@ -515,10 +531,10 @@
 <script>
 	function second(container){
     //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-		var pressureChange='<%= pressureChange %>', wi='<%= width %>', hi='<%= height %>', mainV='<%= mainV %>', mainVloss='<%= mainVloss %>',walls='<%= walls %>', wallType='<%= wallType %>', notsubMain='<%= notsubMain %>', mainD='<%= mainD %>', lateralD='<%= lateralD %>', eFlow='<%= eFlow %>' ;
+		var pressureChange='<%= pressureChange %>', wi='<%= width %>', hi='<%= height %>', mainV='<%= mainV %>', mainVloss='<%= mainVloss %>',walls='<%= walls %>', wallType='<%= wallType %>', notsubMain='<%= notsubMainD %>',notsubMainV='<%= notsubMainV %>',notsubMainVloss='<%= notsubMainVloss %>', mainD='<%= mainD %>', lateralD='<%= lateralD %>', eFlow='<%= eFlow %>' ;
         var nameP='<%= nameP %>', nameMPi='<%= nameMPi %>', nameLPi='<%= nameLPi %>';
         console.log(nameP+','+nameMPi+','+nameLPi);
-        return main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow);
+        return main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow,notsubMainV,notsubMainVloss);
 
 	}
 </script>

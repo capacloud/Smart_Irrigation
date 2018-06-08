@@ -583,6 +583,48 @@
 
 					graph.getModel().endUpdate();
 				}
+
+				function exportFile(format)
+				{
+					var bg = '#ffffff';
+					var scale = 1;
+					var b = 1;
+
+					var imgExport = new mxImageExport();
+					var bounds = graph.getGraphBounds();
+					var vs = graph.view.scale;
+
+					// New image export
+					var xmlDoc = mxUtils.createXmlDocument();
+					var root = xmlDoc.createElement('output');
+					xmlDoc.appendChild(root);
+
+					// Renders graph. Offset will be multiplied with state's scale when painting state.
+					var xmlCanvas = new mxXmlCanvas2D(root);
+					xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
+					xmlCanvas.scale(scale / vs);
+
+					imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+
+					// Puts request data together
+					var w = Math.ceil(bounds.width * scale / vs + 2 * b);
+					var h = Math.ceil(bounds.height * scale / vs + 2 * b);
+
+					var xml = mxUtils.getXml(root);
+
+					if (bg != null)
+					{
+						bg = '&bg=' + bg;
+					}
+
+					new mxXmlRequest('http://localhost:8080/Export', 'filename=export.' + format + '&format=' + format +
+	        			bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).
+	        			simulate(document, '_blank');
+				}
+				document.body.appendChild(mxUtils.button('Export PNG', function()
+				{
+					exportFile('pdf');
+				}));
 			}
 			/*
 			var xmlDoc = mxUtils.createXmlDocument();
@@ -673,7 +715,7 @@
 <body onload="second(document.getElementById('graphContainer'))">
 
 	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:50000px;height:50000px;background:url('editors/images/grid.gif');cursor:default;">
+		style="position:relative;overflow:hidden;width:5000px;height:5000px;background:url('editors/images/grid.gif');cursor:default;">
 	</div>
 </body>
 </html>

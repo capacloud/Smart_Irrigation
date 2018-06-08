@@ -14,7 +14,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path=require('path');
 
-var mainD1, lateralD1, width1, height1, eFlow1, nameP1, nameMPi1, nameLPi1, pressureChange1, mainV1, mainVloss1,walls1, wallType1, notsubMain1;
+var mainD1, lateralD1, width1, height1, eFlow1, nameP1, nameMPi1, nameLPi1, pressureChange1, mainV1, mainVloss1,walls1, wallType1, notsubMainD1, notsubMainV1, notsubMainVloss1;
 
 app.use(express.static(path.join(__dirname, '/cssFiles')))
 app.use(express.static(path.join(__dirname, '/actions')))
@@ -39,7 +39,9 @@ app.get('/graph', function(req, res){
         mainVloss:mainVloss1,
         walls:walls1,
         wallType:wallType1,
-        notsubMain:notsubMain1,
+        notsubMainD:notsubMainD1,
+        notsubMainV:notsubMainV1,
+        notsubMainVloss:notsubMainVloss1,
         mainD:mainD1,
         lateralD:lateralD1,
         eFlow:eFlow1
@@ -53,10 +55,10 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var g=10, rho=1000, C=150;
     //var walls=1;
 
-    
+
 
     lateralL=28;
-
+    var notsubMainD=notsubMain;
     var orificeN = Math.floor(lateralL*12/5.5);
     var lateralQ = orificeN*orificeQ/(60*60);
     //console.log("orificeN :"+orificeN);
@@ -66,6 +68,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     mainL = mainL*0.0254*12;
     lateralQ = lateralQ/1000;
     lateralD=lateralD/1000;//*0.0254; //cout << "lateralD :" << lateralD << endl;
+    notsubMainD=notsubMainD/1000;
     lateralL=lateralL*0.0254*12;
     mainD = mainD/1000;//*0.0254;
     var lateralV = lateralQ*4/(3.14*lateralD*lateralD);
@@ -74,6 +77,9 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     //console.log("lateralQ :" +lateralQ);
     var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
     var mainQ = lateralQ*lateralN*1000*60;  // lpm
+    var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
+    var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+    console.log("notsubMainQ: "+notsubMainQ);
     console.log("mainQ (lpm):" + mainQ);
 
     var smallD = lateralD-0.001;
@@ -96,6 +102,8 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 
     var pressureChange = (hf+hm*orificeN)*g*rho*0.000145;
     var kineticH = Math.pow(mainV,2)/(2*g);
+    var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+    console.log("notsubMainVloss: "+notsubMainVloss);
     console.log("change in pressure caused in lateral (psi): "+ pressureChange);
     //console.log("kineticH :" + kineticH);
     var mainVloss = lateralQ*4/(3.14*mainD*mainD);
@@ -164,7 +172,9 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     mainVloss1=mainVloss;
     walls1=walls2;
     wallType1=wallType2;
-    notsubMain1=notsubMain2;
+    notsubMainD1=notsubMainD;
+    notsubMainV1=notsubMainV;
+    notsubMainVloss1=notsubMainVloss;
 
 
     //console.log("pressureChange :"+pressureChange);
