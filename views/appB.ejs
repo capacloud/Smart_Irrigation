@@ -38,7 +38,18 @@
 				try
 				{
 					var g=10, rho=1000;
-					var v1 = graph.insertVertex(parent, null, '', 250, 20, 20, 20, 'fillColor=blue');
+					var v1 = graph.insertVertex(parent, null, '', 350, 120, 20, 20, 'fillColor=blue');
+					//change later
+					/*
+					var v2 = graph.insertVertex(parent, null, '', 350, 400, 20, 20, 'fillColor=blue');
+					graph.insertEdge(parent, null, '', v2, v1);
+					var v3 = graph.insertVertex(parent, null, '', 350, 20, 20, 20);
+					var v6 = graph.insertVertex(parent, null, '', 1700, 20, 20, 20);
+					var v4 = graph.insertVertex(parent, null, '', 250, 120, 20, 20);
+					var v5 = graph.insertVertex(parent, null, '', 250, 1800, 20, 20);
+					graph.insertEdge(parent, null, "4.5m",v3,v6);
+					graph.insertEdge(parent, null, "5m", v4,v5);
+					*/
 					//var v2 = graph.insertVertex(parent, null, 'World!', 20, 150, 80, 30);
 					//var v3 = graph.insertVertex(parent, null, '', 200, 150, 80, 30);
 					//var v4 = graph.insertVertex(v2, null, '', 150, 20, 80, 30);
@@ -68,6 +79,8 @@
 					var maxXloss=0;
 					var maxYloss=0;
 					var maxpressureChange=0;
+					var maxXdim=0;
+					var maxYdim=0;
 					//console.log(width+","+height);
 
                     var n28 = Math.floor(wi/28);
@@ -75,8 +88,8 @@
 					//n28 = 3;
                     var tempMain=v1;
                     var prevMain=v1;
-                    var xMain = 20+100+250;
-                    var yMain = 20;
+                    var xMain = 20+100+250+100+100;
+                    var yMain = 20+100;
 					var lastArr=[];
 					var tempLastMain;
 					var initialMainV=mainV;
@@ -101,6 +114,7 @@
 					var pvcFTA = 2;
 					var pvcMTA = 2;
 					var emitterPer28=Math.floor(28*12/5.5); //taking into account 5.5inch x 6 inch pockets
+					var sourceLocation="BL";
 
 
                     for(var k=0; k<n28; k++){
@@ -126,6 +140,7 @@
 						yloss=0;
 						tempPY=0;
 						mainV=initialMainV;
+						//maxXdim = Math.max(maxXdim, xMain);
                         for(var i=0; i<height; i++){
 							pvcPipe2+=0.5;
 							lateralPipe+=28;
@@ -162,8 +177,12 @@
     							//console.log(i+j);
     						}
 
+
     						//xSub+= 24;
     					}
+						console.log("maxXdim :"+xEmit);
+						maxXdim=Math.max(maxXdim,xEmit);
+						maxYdim=Math.max(maxYdim, yEmit);
 						kineticT = Math.pow(notsubMainV,2)/(2*g);
 						//notsubMainV-=notsubMainVloss;
 						tempPX= kineticT*rho*g*0.000145;
@@ -261,10 +280,14 @@
 	    							xEmit+= 40;
 	    							//console.log(i+j);
 	    						}
+
 								//console.log('heck :'+grommet);
 
 	    						//xSub+= 24;
 	    					}
+							console.log("maxXdim :"+xEmit);
+							maxXdim=Math.max(maxXdim,xEmit);
+							maxYdim=Math.max(maxYdim, yEmit);
 							/*
 							tempLastMain = graph.insertVertex(parent, null, '', xMain-200, yMain, 20, 20, 'fillColor=green');
 							xSub = xMain-300;
@@ -302,6 +325,31 @@
 					//totpressCha= Math.max(totpressCha,1);
 					graph.insertVertex(parent, null, totpressCha, 10,10,200,20);
 					console.log("net pressure change is: "+totpressCha);
+					console.log("maxX dimension :"+maxXdim);
+					console.log("maxY dimension :"+maxYdim);
+					maxXdim+=140
+					if(sourceLocation=="TR"){
+						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=blue');
+						var v98 = graph.insertVertex(parent,null,'',maxXdim,70,20,20,'fillColor=blue');
+						graph.insertEdge(parent,null,'',v1,v99);
+						graph.insertEdge(parent,null,'',v99,v98);
+					}
+					else if (sourceLocation=="BR") {
+						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=blue');
+						var v98 = graph.insertVertex(parent,null,'',maxXdim+50,70,20,20,'fillColor=blue');
+						var v97 = graph.insertVertex(parent,null,'',maxXdim+50,maxYdim+50,20,20,'fillColor=blue');
+						graph.insertEdge(parent,null,'',v1,v99);
+						graph.insertEdge(parent,null,'',v99,v98);
+						graph.insertEdge(parent,null,'',v98,v97);
+					}
+					else if(sourceLocation=="BL"){
+						var v99 = graph.insertVertex(parent, null, '', 250, 120, 20, 20,'fillColor=blue');
+						var v98 = graph.insertVertex(parent, null, '', 250, maxYdim, 20, 20,'fillColor=blue');
+						graph.insertEdge(parent,null,'',v1,v99);
+						graph.insertEdge(parent,null,'',v99,v98);
+					}
+					graph.insertVertex(parent, null, "this is black", maxXdim, maxYdim, 20, 20, "fillColor:black");
+
 					if(wallType!='B'){
 						pvcElbow+=(walls-1);
 						pvcPipe1*=walls;
@@ -342,6 +390,7 @@
 						pvcPipe2=0;
 						pvcReducer=0;
 					}
+					/*
 					console.log("screenFilter :"+screenFilter);
 					console.log("venturiAssembly :"+venturiAssembly);
 					console.log("byPassAssembly :"+byPassAssembly);
@@ -359,7 +408,7 @@
 					console.log("airRelease: "+airRelease);
 					console.log("pressureRelesase: "+pressureRelesase);
 					console.log("pvcControlValve "+notsubMain+"mm : "+pvcControlValve);
-
+*/
 					document.getElementById("p1").innerHTML="screenFilter :"+screenFilter;
 					document.getElementById("p2").innerHTML="venturiAssembly :"+venturiAssembly;
 					document.getElementById("p3").innerHTML="byPassAssembly :"+byPassAssembly;

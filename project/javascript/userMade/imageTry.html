@@ -107,8 +107,16 @@
 					console.log("hei :"+height);
 
 
+					for(var i=0; i<1000;i++){
+						tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub, 20, 20, 'fillColor=gray');
+						graph.insertEdge(parent, null, '', prevSub, tempSub);
+						prevsub=tempSub;
+						xSub+=40;
+					}
+
 					//grommet and start connector only 1 in the entire system, inline valve at every lateral
-                    for(var i=0; i<hi; i++){
+					/*
+					for(var i=0; i<hi; i++){
                         ySub+=30;
 						kineticH= Math.pow(mainV,2)/(2*g);  //constant for elbow taken as 1
 						yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
@@ -126,6 +134,7 @@
                         prevEmit=tempSub;
                         xEmit=xSub+200;
                         yEmit=ySub;
+
                         for(var j=0; j<width; j++){
                             xEmit+=40;
 
@@ -195,11 +204,12 @@
                         tempSub = graph.insertVertex(parent, null, tempPY, xSub, ySub, 200, 20, 'fillColor=gray');
                         graph.insertEdge(parent, null, '', prevSub, tempSub);
                         prevSub=tempSub;
+
                         //xSub=20;
                         //ySub-=30;
                         //xSub+=1400;
 
-                    }
+                    }*/
 				}
 				finally
 				{
@@ -292,12 +302,13 @@
 					xmlCanvas.scale(scale / vs);
 
 					imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-
+					//console.log("xmlCanvas: "+xmlCanvas);
 					// Puts request data together
 					var w = Math.ceil(bounds.width * scale / vs + 2 * b);
 					var h = Math.ceil(bounds.height * scale / vs + 2 * b);
 
 					var xml = mxUtils.getXml(root);
+					console.log("xml :"+xml);
 
 					if (bg != null)
 					{
@@ -390,7 +401,7 @@
 
 	<!-- Creates a container for the graph with a grid wallpaper -->
 	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:3210px;height:2410px;border:1px solid gray;cursor:default;">
+		style="position:relative;overflow:hidden;width:32100px;height:2410px;border:1px solid gray;cursor:default;">
 	</div>
 </body>
 </html>

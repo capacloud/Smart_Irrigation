@@ -10,6 +10,14 @@
 
 	<script type="text/javascript">
 
+		var rowsCSV=[];
+		var csvContent="data:text/csv;charset=utf-8,"
+
+		function createCSV(){
+			var enc = encodeURI(csvContent);
+			window.open(enc);
+		}
+
 		function main(container, pressureChange, wi, hi, mainV, mainVloss,walls, notsubMainV, notsubMainVloss)
 		{
 			if (!mxClient.isBrowserSupported())
@@ -56,7 +64,7 @@
 					var tempPX=0;
 					//console.log(width+","+height);
 
-                    var n56 = Math.floor((wi-28)/56);
+                    var n56 = Math.floor((wi-14)/28);
 					console.log('n56 is: '+n56);
 					//n28 = 3;
                     var tempMain=v1;
@@ -88,22 +96,22 @@
 					pvcElbow+=(walls-1);
                     var pvcFTA = 2;
 					var pvcMTA = 2;
-					var emitterPer28=Math.floor(28*12/5.5); //taking into account 5.5inch x 6 inch pockets
-                    var emitterPer56=Math.floor(56*12/5.5);
+					var emitterPer28=Math.floor(14*12/5.5); //taking into account 5.5inch x 6 inch pockets
+                    var emitterPer56=Math.floor(28*12/5.5);
                     var tN56;
                     var newlastArr = [];
-                    var pressureV28 = "give 28";
-                    var pressureV56 = "give 56";
+                    var pressureV28 = "give 14";
+                    var pressureV56 = "give 28";
 
                     if(wi>0){
                         xEmit = xMain;
                         yEmit = yMain+30;
                         var lessN56;
-                        if(wi-28>0){ //check for first 28 feet
+                        if(wi-14>0){ //check for first 28 feet
                             lessN56 = emitterPer28;
                         }
                         else{
-                            lessN56 = Math.floor((wi%28)*12/5.5);
+                            lessN56 = Math.floor((wi%14)*12/5.5);
                         }
                         for(var k=0; k<height; k++){  //first set of emitter column
 							emitter+=1;
@@ -137,7 +145,7 @@
                             }
                         }
 
-                        tN56 = Math.floor((wi-28)/56);  //56 feet
+                        tN56 = Math.floor((wi-14)/28);  //56 feet
                         xMain=xEmit+40;
                         for(var k=0; k<tN56; k++){		//56 feet sets
                             xMain=xEmit+40;
@@ -145,8 +153,8 @@
 							notsubMainV-=notsubMainVloss;
 							tempPX= kineticT*rho*g*0.000145;
 							pvcT+=1;
-							pvcPipe1+=56;
-							
+							pvcPipe1+=28;
+
 
                             tempMain = graph.insertVertex(parent, null, tempPX, xMain, yMain, 200, 20, 'fillColor=green');
                             graph.insertEdge(parent, null, '', prevMain, tempMain);
@@ -183,7 +191,7 @@
                             for(var i=0; i<emitterPer56; i++){		//emitter in the 56 set
                                 xEmit = xEmit+40;
                                 yEmit = ySub;
-                                if(i==emitterPer56/2){
+                                if(i==emitterPer28/2){
                                     for(var j=0; j<height; j++){
                                         tempEmit = graph.insertVertex(parent, null,pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
@@ -206,7 +214,7 @@
                             }
                             prevMain=tempMain;
                         }
-                        if(Math.floor((wi-28)%56)>56){		//check for last submain
+                        if(Math.floor((wi-14)%28)>28){		//check for last submain
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
@@ -242,7 +250,7 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-28)%56)*12/5.5;
+                            width=Math.floor((wi-14)%28)*12/5.5;
                             for(var i=0; i<width; i++){		//emitter assignments
 								xEmit = xEmit+40;
                                 yEmit = ySub;
@@ -296,7 +304,7 @@
                             lastArr=newlastArr;
                             newlastArr=[];
                         }
-                        else if(Math.floor((wi-28)%56)>=0){
+                        else if(Math.floor((wi-14)%28)>=0){
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
@@ -328,7 +336,7 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-28)%56)*12/5.5;
+                            width=Math.floor((wi-14)%28)*12/5.5;
                             for(var i=0; i<width; i++){
 								xEmit = xEmit+40;
                                 yEmit = ySub;
@@ -600,7 +608,7 @@
 		var lateralD=16, lateralL=84, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
 		var wi = lateralL, hi = mainL;
 		var g=10, rho=1000, C=150;
-		lateralL=56; //calclulating for 56*x ft^2
+		lateralL=28; //calclulating for 56*x ft^2
 
 		var orificeN = Math.floor(lateralL*12/5.5);
 		var lateralQ = orificeN*orificeQ/(60*60);
