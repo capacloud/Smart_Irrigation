@@ -14,7 +14,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var path=require('path');
 
-var mainD1, lateralD1, width1, height1, eFlow1, nameP1, nameMPi1, nameLPi1, pressureChange1, mainV1, mainVloss1,walls1, wallType1, notsubMainD1, notsubMainV1, notsubMainVloss1;
+var mainD1, lateralD1, width1, height1, eFlow1, nameP1, nameMPi1, nameLPi1, pressureChange1, mainV1, mainVloss1,walls1, wallType1, notsubMainD1, notsubMainV1, notsubMainVloss1, source1;
 
 app.use(express.static(path.join(__dirname, '/cssFiles')))
 app.use(express.static(path.join(__dirname, '/actions')))
@@ -44,13 +44,14 @@ app.get('/graph', function(req, res){
         notsubMainVloss:notsubMainVloss1,
         mainD:mainD1,
         lateralD:lateralD1,
-        eFlow:eFlow1
+        eFlow:eFlow1,
+        source:source1
     });
 });
 
-function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, notsubMain2, socket){
+function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, notsubMain2,source2, socket){
 //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-    var lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2;
+    var lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2, soure=source2;
     var wi = lateralL, hi = mainL;
     var g=10, rho=1000, C=150;
     //var walls=1;
@@ -172,9 +173,10 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     mainVloss1=mainVloss;
     walls1=walls2;
     wallType1=wallType2;
-    notsubMainD1=notsubMainD;
+    notsubMainD1=notsubMain2;
     notsubMainV1=notsubMainV;
     notsubMainVloss1=notsubMainVloss;
+    source1=source2;
 
 
     //console.log("pressureChange :"+pressureChange);
@@ -195,10 +197,10 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 io.on('connection', function(socket){
     console.log('user Connected');
 
-    socket.on('calculate', function(mainD2, lateralD2, width2, height2, eFlow2, walls, wallType2, notsubMain2){
+    socket.on('calculate', function(mainD2, lateralD2, width2, height2, eFlow2, walls, wallType2, notsubMain2, source2){
         //console.log(mainD+','+width);
 
-        return second(mainD2, lateralD2, width2, height2, eFlow2,walls, wallType2, notsubMain2, socket);
+        return second(mainD2, lateralD2, width2, height2, eFlow2,walls, wallType2, notsubMain2,source2, socket);
         //socket.emit('showNet');
     });
 
