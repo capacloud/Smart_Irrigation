@@ -5,6 +5,7 @@
   "dependencies": {
     "ejs": "^2.5.8",
     "express": "^4.15.2",
+    "html2canvas": "^1.0.0-alpha.12",
     "mysql": "^2.15.0",
     "socket.io": "^2.1.0"
   }

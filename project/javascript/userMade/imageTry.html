@@ -6,13 +6,43 @@
 	<title>Export example for mxGraph</title>
 
 	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript" src="http://canvg.github.io/canvg/rgbcolor.js"></script>
+	<script type="text/javascript" src="http://canvg.github.io/canvg/StackBlur.js"></script>
+	<script type="text/javascript" src="http://canvg.github.io/canvg/canvg.js"></script>
 	<script type="text/javascript">
 		mxBasePath = '../src';
 	</script>
+	<script>
+	function download(filename, text) {
+	  var element = document.createElement('a');
+	  var pnc = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+	  window.open(pnc);
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
 
+	  element.style.display = 'none';
+	  document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	}
+	</script>
 	<script type="text/javascript" src="../src/js/mxClient.js"></script>
 
 	<!-- Example code -->
+
+	<script type="text/javascript">
+	function callThis(format) {
+		var c = document.getElementById("canvas1");
+		//c.width = document.getElementsByTagName("svg")[0].getBoundingClientRect().width;
+
+		var t22 = (new XMLSerializer).serializeToString(document.getElementsByTagName("svg")[0]);
+		console.log(t22);
+		download("somename.svg",t22);
+		canvg(c, t22);
+	}
+	</script>
 	<script type="text/javascript">
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
@@ -107,8 +137,8 @@
 					console.log("hei :"+height);
 
 
-					for(var i=0; i<1000;i++){
-						tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub, 20, 20, 'fillColor=gray');
+					for(var i=0; i<118;i++){
+						tempSub= graph.insertVertex(parent, null, i+1, xSub, ySub, 20, 20, 'fillColor=gray');
 						graph.insertEdge(parent, null, '', prevSub, tempSub);
 						prevsub=tempSub;
 						xSub+=40;
@@ -323,7 +353,7 @@
 				// Exporting to bitmap using ExportServlet
 				document.body.appendChild(mxUtils.button('Export PNG', function()
 				{
-					exportFile('png');
+					callThis('png');
 				}));
 
 				// Exporting to PDF using ExportServlet
@@ -400,8 +430,10 @@
 <body onload="second(document.getElementById('graphContainer'))">
 
 	<!-- Creates a container for the graph with a grid wallpaper -->
+	<!--<a href="data:application/octet-stream;charset=utf-16le;base64,//5mAG8AbwAgAGIAYQByAAoA">text file</a>-->
 	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:32100px;height:2410px;border:1px solid gray;cursor:default;">
+		style="position:relative;overflow:hidden;width:20000px;height:400px;border:1px solid gray;cursor:default;">
 	</div>
+	<canvas id="canvas1" width="20000px" height="600px"></canvas>
 </body>
 </html>

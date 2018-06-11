@@ -1,5 +1,18 @@
 <html>
 <head>
+	<title>client</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="calcul.css">
+	<script type="text/javascript" language="javascript" src="actions/v0.34/jquery.js">
+	</script>
+	 <script type="text/javascript" language="javascript" src="actions/v0.34/html2canvas.min.js">
+	</script>
+	<script type="text/javascript" language="javascript" src="actions/v0.34/jquery.plugin.html2canvas.js">
+	</script>
 	<title>Irrigation network</title>
 
 	<script type="text/javascript">
@@ -361,7 +374,15 @@
                                 lastArr=newlastArr;
                                 newlastArr=[];
                             }
+
                         }
+						$('#graphContainer').html2canvas({
+						    onrendered : function(canvas) {
+						    var img = canvas.toDataURL();
+						    // img now contains an IMG URL, you can do various things with it, but most simply:
+						        $('<img>',{src:img}).appendTo($('body'));
+						    }
+						 });
 
 
 
@@ -672,7 +693,7 @@
 <body onload="second(document.getElementById('graphContainer'))">
 
 	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:50000px;height:50000px;background:url('editors/images/grid.gif');cursor:default;">
+		style="position:relative;overflow:hidden;width:50000px;height:5000px;background:url('editors/images/grid.gif');cursor:default;">
 	</div>
 </body>
 </html>
