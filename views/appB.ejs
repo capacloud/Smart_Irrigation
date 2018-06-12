@@ -9,6 +9,33 @@
 	<script type="text/javascript" src="javascript/src/js/mxClient.js"></script>
 
 	<script type="text/javascript">
+	function download(filename, text) {
+	  var element = document.createElement('a');
+	  var pnc = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+	  window.open(pnc);
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+	  document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	}
+
+	function callThis(format) {
+		var c = document.getElementById("canvas1");
+		//c.width = document.getElementsByTagName("svg")[0].getBoundingClientRect().width;
+
+		var t22 = (new XMLSerializer).serializeToString(document.getElementsByTagName("svg")[0]);
+		console.log(t22);
+		download("somename.svg",t22);
+		canvg(c, t22);
+	}
+	</script>
+
+	<script type="text/javascript">
 		var rowsCSV=[];
 		var csvContent="data:text/csv;charset=utf-8,"
 
@@ -541,6 +568,10 @@
 					// Updates the display
 					graph.getModel().endUpdate();
 				}
+				document.body.appendChild(mxUtils.button('Export PNG', function()
+				{
+					callThis('png');
+				}));
 			}
 			/*
 			var xmlDoc = mxUtils.createXmlDocument();

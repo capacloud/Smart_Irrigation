@@ -1,0 +1,17 @@
+coefficient for emitters and formula used
+change in water radius due to emitter
+coefficient for minor loss for T both pvc (40mm ,50mm, 63mm, 25mm, 16mm, 12mm)
+coefficient for minor loss for elbow (40mm ,50mm, 63mm, 25mm, 16mm, 12mm)
+coefficient for minor loss for pvc reducer
+coefficient for minor loss for startConnector
+coefficient for minor loss for grommet
+coefficient for minor loss for inlineValve
+coefficient for minor loss for flushValve
+coefficient for minor loss for pvcControlValve
+coefficient for minor loss for screenFilter
+coefficient for minor loss for venturiAssembly
+coefficient for minor loss for byPassAssembly
+coefficient for minor loss for airRelease
+coefficient for minor loss for pressureRelesase
+coefficient for minor loss for pvcFTA
+coefficient for minor loss for pvcMTA
