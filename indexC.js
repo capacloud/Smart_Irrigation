@@ -76,13 +76,13 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var g=10, rho=1000, C=150;
     //var walls=1;
 
-    if(wi>12){
-        lateralL=56; //calclulating for 56*x ft^2
+    if(wi>15){
+        lateralL=28; //calclulating for 56*x ft^2
         var notsubMainD=notsubMain;
 		var orificeN = Math.floor(lateralL*12/5.5);
 		var lateralQ = orificeN*orificeQ/(60*60);
-		console.log("orificeN :"+orificeN);
-		console.log("orificeQ :"+orificeQ);
+		//console.log("orificeN :"+orificeN);
+		//console.log("orificeQ :"+orificeQ);
         var lateralN = hi*2;
 
 		mainL = mainL*0.0254*12;
@@ -97,7 +97,8 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 		console.log("lateralQ :" +lateralQ);
     	var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
 		var mainQ = lateralQ*lateralN*1000*60;  // lpm
-		var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
+        var notsubMainQ = Math.floor(hi*2*wi*12*orificeQ/(5.5*60)); //lpm
+		//var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
 		var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
 		console.log("not submain V: "+notsubMainV);
 		console.log("mainQ (lpm):" + mainQ);
@@ -255,6 +256,8 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 		console.log("pressureChange :"+pressureChange);
 		console.log("mainV :" + mainV);
 		console.log("mainVloss :"+mainVloss);
+        lateralD*=1000;
+        mainD*=1000;
 
         var temp1 = 1000;
         var nameP="";

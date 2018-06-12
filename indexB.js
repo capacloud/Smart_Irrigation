@@ -64,7 +64,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var lateralQ = orificeN*orificeQ/(60*60);
     //console.log("orificeN :"+orificeN);
     //console.log("orificeQ :"+orificeQ);
-    var lateralN = hi*2;
+    var lateralN = hi*2;    // for submain
 
     mainL = mainL*0.0254*12;
     lateralQ = lateralQ/1000;

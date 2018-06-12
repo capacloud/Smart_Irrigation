@@ -2,17 +2,17 @@
 <head>
 	<title>client</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="calcul.css">
+	<!--
 	<script type="text/javascript" language="javascript" src="actions/v0.34/jquery.js">
 	</script>
 	 <script type="text/javascript" language="javascript" src="actions/v0.34/html2canvas.min.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="actions/v0.34/jquery.plugin.html2canvas.js">
-	</script>
+	</script>-->
 	<title>Irrigation network</title>
 
 	<script type="text/javascript">
@@ -159,6 +159,7 @@
                         }
 
                         tN56 = Math.floor((wi-14)/28);  //56 feet
+						console.log("tN56 :"+tN56);
                         xMain=xEmit+40;
                         for(var k=0; k<tN56; k++){		//56 feet sets
                             xMain=xEmit+40;
@@ -201,10 +202,11 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
+							console.log("emitterPer56 :"+emitterPer56);
                             for(var i=0; i<emitterPer56; i++){		//emitter in the 56 set
                                 xEmit = xEmit+40;
                                 yEmit = ySub;
-                                if(i==emitterPer28/2){
+                                if(i==Math.floor(emitterPer56/2)){
                                     for(var j=0; j<height; j++){
                                         tempEmit = graph.insertVertex(parent, null,pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
@@ -227,7 +229,7 @@
                             }
                             prevMain=tempMain;
                         }
-                        if(Math.floor((wi-14)%28)>28){		//check for last submain
+                        if(Math.floor((wi-14)%28)>14){		//check for last submain
                             xMain=xEmit+40;
 							kineticT = Math.pow(notsubMainV,2)/(2*g);
 							notsubMainV-=notsubMainVloss;
@@ -263,11 +265,12 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-14)%28)*12/5.5;
+                            width=Math.floor(((wi-14)%28)*12/5.5);
+							console.log("width is :"+width);
                             for(var i=0; i<width; i++){		//emitter assignments
 								xEmit = xEmit+40;
                                 yEmit = ySub;
-                                if(i==width/2){
+                                if(i==Math.floor(width/2)){
                                     for(var j=0; j<height; j++){
                                         tempEmit = graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
@@ -349,11 +352,11 @@
                             xSub = xMain;
                             ySub = yMain+30;
                             xEmit = xSub+200;
-                            width=Math.floor((wi-14)%28)*12/5.5;
+                            width=Math.floor(((wi-14)%28)*12/5.5);
                             for(var i=0; i<width; i++){
 								xEmit = xEmit+40;
                                 yEmit = ySub;
-                                if(i==width/2){
+                                if(i==Math.floor(width/2)){
                                     for(var j=0; j<height; j++){
                                         tempEmit = graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
                                         graph.insertEdge(parent, null, '', lastArr[j], tempEmit);
@@ -376,13 +379,14 @@
                             }
 
                         }
+						/*
 						$('#graphContainer').html2canvas({
 						    onrendered : function(canvas) {
 						    var img = canvas.toDataURL();
 						    // img now contains an IMG URL, you can do various things with it, but most simply:
 						        $('<img>',{src:img}).appendTo($('body'));
 						    }
-						 });
+						});*/
 
 
 
@@ -626,16 +630,16 @@
 <script>
 	function second(container){
     //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-		var lateralD=16, lateralL=84, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
+		var lateralD=16, lateralL=15, orificeQ=4, mainL=2, mainD=50,walls=1, notsubMainD=63;
 		var wi = lateralL, hi = mainL;
 		var g=10, rho=1000, C=150;
-		lateralL=28; //calclulating for 56*x ft^2
+		lateralL=28; //calclulating for 28*x ft^2
 
 		var orificeN = Math.floor(lateralL*12/5.5);
 		var lateralQ = orificeN*orificeQ/(60*60);
 		console.log("orificeN :"+orificeN);
 		console.log("orificeQ :"+orificeQ);
-        var lateralN = hi*2;
+        var lateralN = hi*2;		//for submain
 
 		mainL = mainL*0.0254*12;
 		lateralQ = lateralQ/1000;
@@ -649,7 +653,8 @@
 		console.log("lateralQ :" +lateralQ);
     	var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
 		var mainQ = lateralQ*lateralN*1000*60;  // lpm
-		var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
+		var notsubMainQ = Math.floor(hi*2*wi*12*orificeQ/(5.5*60));	//lpm
+		//var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
 		var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
 		console.log("not submain V: "+notsubMainV);
 		console.log("mainQ (lpm):" + mainQ);
@@ -684,6 +689,8 @@
 		console.log("pressureChange :"+pressureChange);
 		console.log("mainV :" + mainV);
 		console.log("mainVloss :"+mainVloss);
+
+
 		return main(container, pressureChange, wi, hi, mainV, mainVloss,walls,notsubMainV,notsubMainVloss);
 
 	}
