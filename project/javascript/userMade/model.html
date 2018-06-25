@@ -21,6 +21,14 @@
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
 		// from the onLoad event handler of the document (see below).
+        var rowsCSV=[];
+		var csvContent="data:text/csv;charset=utf-8,"
+
+		function createCSV(){
+			var enc = encodeURI(csvContent);
+			window.open(enc);
+		}
+
 		function main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow, notsubMainV,notsubMainVloss, source )
 		{
 			// Checks if the browser is supported
@@ -94,7 +102,7 @@
 					var maxYdim=0;
 					//console.log(width+","+height);
 
-                    var n28 = Math.floor(wi/4);
+                    var n28 = Math.floor(wi/8);
 					console.log('n28 is: '+n28);
 					//n28 = 3;
                     var tempMain=v1;
@@ -124,12 +132,12 @@
 					var pvcControlValve=0;
 					var pvcFTA = 2;
 					var pvcMTA = 2;
-					var emitterPer28=Math.floor(4*12/5.5); //taking into account 5.5inch x 6 inch pockets
+					var emitterPer28=Math.floor(8*12/5.5); //taking into account 5.5inch x 6 inch pockets
 					var sourceLocation="TL";
 
 
                     for(var k=0; k<n28; k++){
-						pvcPipe1+=4;
+						pvcPipe1+=8;
 						pvcT+=2;
 						pvcReducer+=2;
 						flushValve+=2;
@@ -148,7 +156,7 @@
                         graph.insertEdge(parent, null, '',prevMain, tempMain);
                         prevSub = tempMain;
                         prevMain = tempMain;
-                        xMain+=1000;
+                        xMain+=1500;
 						kineticH=0;
 						yloss=0;
 						tempPY=0;
@@ -156,7 +164,7 @@
 						//maxXdim = Math.max(maxXdim, xMain);
                         for(var i=0; i<height; i++){
 							pvcPipe2+=0.5;
-							lateralPipe+=4;
+							lateralPipe+=8;
 							startConnector+=1;
 							grommet+=1;
 							inlineValve+=1;
@@ -234,11 +242,11 @@
 
                     }
 
-					width=Math.floor((wi%4)*12/5.5); //taking into account 5.5inch x 6 inch pockets
+					width=Math.floor((wi%8)*12/5.5); //taking into account 5.5inch x 6 inch pockets
 					console.log("width is: "+width);
 					if(width>0){
 						for(var k=0; k<1; k++){
-							pvcPipe1+=(wi%4);
+							pvcPipe1+=(wi%8);
 							pvcT+=2;
 							pvcReducer+=2;
 							flushValve+=2;
@@ -253,14 +261,14 @@
 	                        graph.insertEdge(parent, null, '',prevMain, tempMain);
 	                        prevSub = tempMain;
 	                        prevMain = tempMain;
-	                        xMain+=1000;
+	                        xMain+=1500;
 							kineticH=0;
 							yloss=0;
 							tempPY=0;
 							mainV=initialMainV;
 	                        for(var i=0; i<height; i++){
 								pvcPipe2+=0.5;
-								lateralPipe+=(wi%4);
+								lateralPipe+=(wi%8);
 								startConnector+=1;
 								grommet+=1;
 								inlineValve+=1;
@@ -333,6 +341,182 @@
 
 	                    }
 					}
+                    if(wallType!='B'){
+						pvcElbow+=(walls-1);
+						pvcPipe1*=walls;
+						pvcPipe2*=walls;
+						pvcT*=walls;
+						pvcReducer*=walls;
+						lateralPipe*=walls;
+						startConnector*=walls;
+						grommet*=walls;
+						inlineValve*=walls;
+						emitter*=walls;
+						flushValve*=walls;
+						//pvcControlValve*=walls;
+					}
+					else{
+						pvcElbow+=(walls-1);
+						pvcPipe1*=walls;
+						pvcPipe2*=walls;
+						pvcT*=walls;
+						pvcReducer*=walls;
+						lateralPipe*=walls;
+						startConnector*=walls;
+						grommet*=walls;
+						inlineValve*=walls;
+						emitter*=walls;
+						flushValve*=walls;
+						pvcControlValve*=walls;
+						screenFilter*=walls;
+						venturiAssembly*=walls;
+						byPassAssembly*=walls;
+						airRelease*=walls;
+						pressureRelesase*=walls;
+						pvcFTA*=walls;
+						pvcMTA*=walls;
+					}
+					if(notsubMain==mainD){
+						pvcPipe1+=pvcPipe2;
+						pvcPipe2=0;
+						pvcReducer=0;
+					}
+					/*
+					console.log("screenFilter :"+screenFilter);
+					console.log("venturiAssembly :"+venturiAssembly);
+					console.log("byPassAssembly :"+byPassAssembly);
+					console.log("pvcPipe1 "+notsubMain+"mm : "+pvcPipe1);
+					console.log("pvcPipe2 "+mainD+"mm : "+pvcPipe2);
+					console.log("pvcT "+notsubMain+"mm : "+pvcT);
+					console.log("pvcElbow "+notsubMain+"mm :"+pvcElbow); //used at the end
+					console.log("pvcReducer "+notsubMain+"x"+mainD+"mm : "+pvcReducer);
+					console.log("lateralPipe "+lateralD+"mm : "+lateralPipe);
+					console.log("startConnector "+lateralD+"mm : "+startConnector);
+					console.log("grommet "+lateralD+"mm : "+grommet);
+					console.log("inlineValve "+lateralD+"mm : "+inlineValve);
+					console.log("emitter: "+emitter);
+					console.log("flushValve "+mainD+"mm : "+flushValve);
+					console.log("airRelease: "+airRelease);
+					console.log("pressureRelesase: "+pressureRelesase);
+					console.log("pvcControlValve "+notsubMain+"mm : "+pvcControlValve);
+*//*
+					document.getElementById("p1").innerHTML="screenFilter :"+screenFilter;
+					document.getElementById("p2").innerHTML="venturiAssembly :"+venturiAssembly;
+					document.getElementById("p3").innerHTML="byPassAssembly :"+byPassAssembly;
+					document.getElementById("p4").innerHTML="pvcPipe1 "+notsubMain+"mm : "+pvcPipe1
+					document.getElementById("p5").innerHTML="pvcPipe2 "+mainD+"mm : "+pvcPipe2;
+					document.getElementById("p6").innerHTML="pvcT "+notsubMain+"mm : "+pvcT;
+					document.getElementById("p7").innerHTML="pvcElbow "+notsubMain+"mm :"+pvcElbow;
+					document.getElementById("p8").innerHTML="pvcReducer "+notsubMain+"x"+mainD+"mm : "+pvcReducer;
+					document.getElementById("p9").innerHTML="lateralPipe "+lateralD+"mm : "+lateralPipe;
+					document.getElementById("p10").innerHTML="startConnector "+lateralD+"mm : "+startConnector;
+					document.getElementById("p11").innerHTML="grommet "+lateralD+"mm : "+grommet;
+					document.getElementById("p12").innerHTML="inlineValve "+lateralD+"mm : "+inlineValve;
+					document.getElementById("p13").innerHTML="emitter: "+emitter;
+					document.getElementById("p14").innerHTML="flushValve "+mainD+"mm : "+flushValve;
+					document.getElementById("p15").innerHTML="airRelease: "+airRelease;
+					document.getElementById("p16").innerHTML="pressureRelesase: "+pressureRelesase;
+					document.getElementById("p17").innerHTML="pvcControlValve "+notsubMain+"mm : "+pvcControlValve;
+*/
+					var pvcPipeCost={
+						63:"96.75",
+						50:"76.05",
+						40:"67.35"
+					}
+					var pvcTCost={
+						63:"113.85",
+						50:"72.3",
+						40:"not given"
+					}
+					var pvcECost={
+						63:"84.15",
+						50:"63.4",
+						40:"not given",
+						12:"3.5"
+					}
+					var pvcReducerCost={
+						"63x50":"49.5",
+						"50x40":"35.65",
+						"63x40":"95.9"
+					}
+					var lateralPipeCost={
+						12:"9.5",
+						16:"11"
+					}
+					var inlineValveCost={
+						12:"28",
+						16:"10"
+					}
+					var flushValveCost={
+						63:"145",
+						40:"120",
+						50:"not given"
+					}
+					var startConnectorCost={
+						12:"1.8",
+						16:"2.1"
+					}
+					var grommetCost={
+						12:"3",
+						16:"3"
+					}
+					var emitterCost={
+						2:"4.75",
+						4:"4.75",
+						8:"4.75"
+					}
+					var airReleaseCost={
+						50:"1800",
+						25:"330",
+						40:"not given",
+						63:"not given"
+					}
+					var pressureRelesaseCost={
+						50:"4000",
+						40:"not given",
+						63:"not given"
+					}
+					var pvcControlValveCost={
+						40:"352",
+						50:"not given",
+						63:"not given"
+					}
+					var pvcFTACost={
+						40:"not given",
+						50:"not given",
+						63:"56"
+					}
+					var pvcMTACost={
+						40:"not given",
+						50:"not given",
+						63:"56"
+					}
+					rowsCSV.push(["Component","Number","Rate","Component Cost","Tax","Total Cost"])
+					rowsCSV.push(["Screen Filter Y Type 20 m3 2\" :",screenFilter,"2500","=$C2*$B2","=$D2*0.18","=$D2+$E2"]);
+					rowsCSV.push(["Venturi Assembly 1\" with manifold :",venturiAssembly,"3200"]);
+					rowsCSV.push(["By Pass Assembly 2\"x1.5\" with manifold :",byPassAssembly,"1100"]);
+					rowsCSV.push(["pvcPipe1 "+notsubMain+"mm : ",pvcPipe1,pvcPipeCost[notsubMain]]);
+					rowsCSV.push(["pvcPipe2 "+mainD+"mm : ",pvcPipe2,pvcPipeCost[mainD]]);
+					rowsCSV.push(["pvcT "+notsubMain+"mm : ",pvcT,pvcTCost[notsubMain]]);
+					rowsCSV.push(["pvcElbow "+notsubMain+"mm :",pvcElbow,pvcECost[notsubMain]]);
+					rowsCSV.push(["pvcReducer "+notsubMain+"x"+mainD+"mm : ",pvcReducer,pvcReducerCost[notsubMain+"x"+mainD]]);
+					rowsCSV.push(["lateralPipe "+lateralD+"mm : ",lateralPipe,lateralPipeCost[lateralD]]);
+					rowsCSV.push(["startConnector "+lateralD+"mm : ",startConnector,startConnectorCost[lateralD]]);
+					rowsCSV.push(["grommet "+lateralD+"mm : ",grommet,grommetCost[lateralD]]);
+					rowsCSV.push(["inlineValve "+lateralD+"mm : ",inlineValve,inlineValveCost[lateralD]]);
+					rowsCSV.push(["emitter "+ eFlow+" lph : ",emitter,emitterCost[eFlow]]);
+					rowsCSV.push(["flushValve "+mainD+"mm : ",flushValve,flushValveCost[mainD]]);
+					rowsCSV.push(["Air Release Valve "+notsubMain+"mm : ",airRelease,airReleaseCost[notsubMain]]);
+					rowsCSV.push(["Pressure Release Valve "+notsubMain+"mm : ",pressureRelesase,pressureRelesaseCost[notsubMain]]);
+					rowsCSV.push(["pvcControlValve "+notsubMain+"mm : ",pvcControlValve,pvcControlValveCost[mainD]]);
+					rowsCSV.push(["pvc FTA "+notsubMain+"mm : ",pvcFTA,pvcFTACost[notsubMain]]);
+					rowsCSV.push(["pvc MTA "+notsubMain+"mm : ",pvcMTA,pvcMTACost[notsubMain]]);
+					/*rowsCSV.push(["punch tool for PVC",1]);
+					rowsCSV.push(["punch tool for Emitter",2]);*/
+					rowsCSV.forEach(function(i){
+						var temp2 = i.join(",");
+						csvContent+=temp2+"\r\n";
+					});
                     /*var g=10, rho=1000;
 					var v1 = graph.insertVertex(parent, null, '', 20, 20, 20, 20, 'fillColor=blue');
 					//var v2 = graph.insertVertex(parent, null, 'World!', 20, 150, 80, 30);
@@ -415,7 +599,7 @@
 			new mxXmlRequest('export', 'format=png&w=' + w +
 		 	'&h=' + h + '&bg=#F9F7ED&xml=' + encodeURIComponent(xml))
 		 	.simulate(document, '_blank');*/
-
+            return createCSV();
 		};
 
 
@@ -425,10 +609,10 @@
 <script>
 	function second(container){
     //lateralD = mm, lateralL=feet, orificeQ=lph, mainL=feet, mainD=mm
-		var lateralD=16, lateralL=8, orificeQ=2, mainL=1, mainD=40, notsubMain=50,walls=1,wallType='A',source="TL";
+		var lateralD=12, lateralL=8, orificeQ=8, mainL=8, mainD=12, notsubMain=12,walls=1,wallType='A',source="TL";
 		var wi = lateralL, hi = mainL, eFlow=orificeQ;
 		var g=10, rho=1000, C=150;
-        lateralL=4;
+        lateralL=8;
 
         var notsubMainD=notsubMain;
         var orificeN = Math.floor(lateralL*12/5.5);
@@ -483,6 +667,9 @@
         console.log("mainVloss :"+mainVloss);
         console.log("notsubMainV :"+notsubMainV);
         console.log("notsubMainVloss :"+notsubMainVloss);
+        lateralD*=1000;
+        mainD*=1000;
+        //notsubMain*=1000;
 		return main(container, pressureChange, wi, hi, mainV, mainVloss,walls, lateralD, mainD, notsubMain, wallType, eFlow,notsubMainV,notsubMainVloss,source);
 
 	}

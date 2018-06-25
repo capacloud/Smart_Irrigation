@@ -30,7 +30,7 @@
 
 		var t22 = (new XMLSerializer).serializeToString(document.getElementsByTagName("svg")[0]);
 		console.log(t22);
-		download("somename.svg",t22);
+		download("somename.png",t22);
 		canvg(c, t22);
 	}
 	</script>
@@ -65,7 +65,7 @@
 				try
 				{
 					var g=10, rho=1000;
-					var v1 = graph.insertVertex(parent, null, '', 350, 120, 20, 20, 'fillColor=blue');
+					var v1 = graph.insertVertex(parent, null, '', 350, 120, 20, 20, 'fillColor=lightyellow');
 					//change later
 					/*
 					var v2 = graph.insertVertex(parent, null, '', 350, 400, 20, 20, 'fillColor=blue');
@@ -142,6 +142,7 @@
 					var pvcMTA = 2;
 					var emitterPer28=Math.floor(28*12/5.5); //taking into account 5.5inch x 6 inch pockets
 					var sourceLocation=source;
+					var initialnotSubMainV = notsubMainV;
 
 
                     for(var k=0; k<n28; k++){
@@ -261,7 +262,7 @@
 							tempPX= kineticT*rho*g*0.000145;
 							xloss+=tempPX;
 							maxXloss = Math.max(maxXloss, xloss);
-	                        tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
+	                        tempMain = graph.insertVertex(parent,null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
 	                        xSub = xMain;
 	                        ySub = yMain + 30;
 	                        graph.insertEdge(parent, null, '',prevMain, tempMain);
@@ -347,35 +348,45 @@
 
 	                    }
 					}
-					var totpressCha= maxXloss+maxYloss+maxpressureChange;
-					totpressCha+=totpressCha*15/100;
-					//totpressCha= Math.max(totpressCha,1);
-					graph.insertVertex(parent, null, totpressCha, 10,10,200,20);
+
 					console.log("net pressure change is: "+totpressCha);
 					console.log("maxX dimension :"+maxXdim);
 					console.log("maxY dimension :"+maxYdim);
 					maxXdim+=140
+					var beginKineticT = Math.pow(notsubMainV,2)/(2*g)*rho*g*0.000145;
+					var beginPloss = 0;
 					if(sourceLocation=="TR"){
-						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=blue');
-						var v98 = graph.insertVertex(parent,null,'',maxXdim,70,20,20,'fillColor=blue');
+						beginPloss+=beginKineticT;
+						var v98 = graph.insertVertex(parent,null,'',maxXdim,70,20,20,'fillColor=lightyellow');
+						beginPloss+=beginKineticT;
+						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=lightyellow');
 						graph.insertEdge(parent,null,'',v99,v1);
 						graph.insertEdge(parent,null,'',v98,v99);
 					}
 					else if (sourceLocation=="BR") {
-						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=blue');
-						var v98 = graph.insertVertex(parent,null,'',maxXdim+50,70,20,20,'fillColor=blue');
-						var v97 = graph.insertVertex(parent,null,'',maxXdim+50,maxYdim+50,20,20,'fillColor=blue');
+						beginPloss+=beginKineticT;
+						var v97 = graph.insertVertex(parent,null,'',maxXdim+50,maxYdim+50,20,20,'fillColor=lightyellow');
+						beginPloss+=beginKineticT;
+						var v98 = graph.insertVertex(parent,null,'',maxXdim+50,70,20,20,'fillColor=lightyellow');
+						beginPloss+=beginKineticT;
+						var v99 = graph.insertVertex(parent,null,'',350,70,20,20,'fillColor=lightyellow');
 						graph.insertEdge(parent,null,'',v99,v1);
 						graph.insertEdge(parent,null,'',v98,v99);
 						graph.insertEdge(parent,null,'',v97,v98);
 					}
 					else if(sourceLocation=="BL"){
 						//var v99 = graph.insertVertex(parent, null, '', 250, 120, 20, 20,'fillColor=blue');
-						var v98 = graph.insertVertex(parent, null, '', 350, maxYdim, 20, 20,'fillColor=blue');
+						beginPloss+=beginKineticT;
+						var v98 = graph.insertVertex(parent, null, '', 350, maxYdim, 20, 20,'fillColor=lightyellow');
 						graph.insertEdge(parent,null,'',v98,v1);
 						//graph.insertEdge(parent,null,'',v98,v99);
 					}
 					//graph.insertVertex(parent, null, "this is black", maxXdim, maxYdim, 20, 20, "fillColor=black");
+
+					var totpressCha= maxXloss+maxYloss+maxpressureChange+beginPloss;
+					totpressCha+=totpressCha*15/100;
+					//totpressCha= Math.max(totpressCha,1);
+					graph.insertVertex(parent, null, totpressCha, 10,10,200,20);
 
 					if(wallType!='B'){
 						pvcElbow+=(walls-1);
@@ -637,7 +648,7 @@
 
 
 <body onload="second(document.getElementById('graphContainer'))">
-	<button id="details">Show Components</button>
+	<button id="details">Save PNG</button>
 	<div id="Modal" class="modal">
 		<div class="modal-content">
 			<span class="close">&times;</span>
@@ -664,7 +675,8 @@
 		document.getElementById("p1").innerHTML="worksNot";
 		modal= document.getElementById("Modal")
 		document.getElementById("details").onclick = function(){
-			modal.style.display="block";
+			//modal.style.display="block";
+			callThis('png');
 		}
 		document.getElementsByClassName("close")[0].onclick = function(){
 			modal.style.display="none";

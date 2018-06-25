@@ -1,0 +1,98 @@
+<!--
+  Copyright (c) 2006-2018, JGraph Ltd
+
+  Hello, World! example for mxGraph. This example demonstrates using
+  a DOM node to create a graph and adding vertices and edges.
+-->
+<html>
+<head>
+	<title>Hello, World! example for mxGraph</title>
+
+	<!-- Sets the basepath for the library if not in same directory -->
+	<script type="text/javascript">
+		mxBasePath = '../src';
+	</script>
+
+	<!-- Loads and initializes the library -->
+	<script type="text/javascript" src="../src/js/mxClient.js"></script>
+
+	<!-- Example code -->
+	<script type="text/javascript">
+		// Program starts here. Creates a sample graph in the
+		// DOM node with the specified ID. This function is invoked
+		// from the onLoad event handler of the document (see below).
+		function main(container)
+		{
+			// Checks if the browser is supported
+			if (!mxClient.isBrowserSupported())
+			{
+				// Displays an error message if the browser is not supported.
+				mxUtils.error('Browser is not supported!', 200, false);
+			}
+			else
+			{
+				// Disables the built-in context menu
+				mxEvent.disableContextMenu(container);
+
+				// Creates the graph inside the given container
+				var graph = new mxGraph(container);
+
+				// Enables rubberband selection
+				new mxRubberband(graph);
+
+				// Gets the default parent for inserting new cells. This
+				// is normally the first child of the root (ie. layer 0).
+				var parent = graph.getDefaultParent();
+
+				// Adds cells to the model in a single step
+				graph.getModel().beginUpdate();
+				try
+				{
+					//var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
+                    //var v11 = graph.insertVertex(parent, null, '', 180, 430, 120,70,'fillColor=lightgreen');
+                    //var v12 = graph.insertVertex(parent, null, '', 1080, 430, 120,70,'fillColor=lightgreen');
+
+					var v1 = graph.insertVertex(parent, null, 'Open', 230, 200, 20, 30);
+                    //var v2 = graph.insertVertex(parent, null, 'Pump', 200, 450, 80,30);
+                    var v3 = graph.insertVertex(parent, null, '', 380, 200, 20,30,'fillColor=lightgreen');
+                    //var v4 = graph.insertVertex(parent, null, 'Open', 500, 200, 20,30);
+                    var v5 = graph.insertVertex(parent, null, '', 380, 300, 20,30,'fillColor=red');
+                    //var v6 = graph.insertVertex(parent, null, 'Open', 830, 200, 20,30);
+                    var v7 = graph.insertVertex(parent, null, '', 980, 200, 20,30,'fillColor=lightgreen');
+                    var v8 = graph.insertVertex(parent, null, '', 980, 300, 20,30,'fillColor=red');
+                    var v9 = graph.insertVertex(parent, null, 'Open', 1130, 200, 20,30);
+                    //var v10 = graph.insertVertex(parent, null, 'Recirculate', 1100, 450, 80,30);
+                    //graph.insertEdge(parent, null, '', v12, v11);
+                    //graph.insertEdge(parent,null,'',v11,v1);
+                    graph.insertEdge(parent,null,'',v1,v3);
+                    graph.insertEdge(parent,null,'',v3,v5);
+                    graph.insertEdge(parent,null,'',v5,v8);
+                    //graph.insertEdge(parent,null,'',v3,v4);
+                    //graph.insertEdge(parent,null,'',v6,v7);
+                    graph.insertEdge(parent,null,'',v8,v7);
+                    graph.insertEdge(parent,null,'',v7,v9);
+                    graph.insertEdge(parent, null,'', v3,v7);
+                    //graph.insertEdge(parent,null,'',v9,v12);
+
+
+                    			//var e1 = graph.insertEdge(parent, null, '', v1, v2);
+				}
+				finally
+				{
+					// Updates the display
+					graph.getModel().endUpdate();
+				}
+			}
+		};
+	</script>
+</head>
+
+<!-- Page passes the container for the graph to the program -->
+<body onload="main(document.getElementById('graphContainer'))">
+
+	<!-- Creates a container for the graph with a grid wallpaper -->
+	<div id="graphContainer"
+		style="position:relative;overflow:hidden;width:3210px;height:2410px;background:url('editors/images/grid.gif');cursor:default;">
+	</div>
+</body>
+</html>
