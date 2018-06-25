@@ -28,7 +28,7 @@ app.get('/', function(req, res){
 });
 
 app.get('/graph', function(req, res){
-    res.render('appB1',{
+    res.render('appB',{
         width:width1,
         height:height1,
         nameP:nameP1,
@@ -57,55 +57,102 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     //var walls=1;
 
 
+    for(var op=0; op<1000; op++){
+        //lateralL=40;
+        lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2, soure=source2;
+        wi = lateralL, hi = mainL;
+        lateralL=op;
+        var notsubMainD=notsubMain;
+        var orificeN = Math.floor(lateralL*12/5.5);
+        var lateralQ = orificeN*orificeQ/(60*60);
+        //console.log("orificeN :"+orificeN);
+        //console.log("orificeQ :"+orificeQ);
+        var lateralN = hi*2;    // for submain
 
-    lateralL=28;
-    var notsubMainD=notsubMain;
-    var orificeN = Math.floor(lateralL*12/5.5);
-    var lateralQ = orificeN*orificeQ/(60*60);
-    //console.log("orificeN :"+orificeN);
-    //console.log("orificeQ :"+orificeQ);
-    var lateralN = hi*2;    // for submain
+        mainL = mainL*0.0254*12;
+        lateralQ = lateralQ/1000;
+        lateralD=lateralD/1000;//*0.0254; //cout << "lateralD :" << lateralD << endl;
+        notsubMainD=notsubMainD/1000;
+        lateralL=lateralL*0.0254*12;
+        mainD = mainD/1000;//*0.0254;
+        var lateralV = lateralQ*4/(3.14*lateralD*lateralD);
+        var F1 = 0.63837*Math.pow(orificeN, -1.8916) + 0.35929;
+        var hf = 10.77*lateralL*(Math.pow((lateralQ/C),1.852))*Math.pow(lateralD,-4.865);
+        //console.log("lateralQ :" +lateralQ);
+        var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
+        var mainQ = lateralQ*lateralN*1000*60;  // lpm
+        var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
+        var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+        //console.log("notsubMainQ: "+notsubMainQ);
+        //console.log("mainQ (lpm):" + mainQ);
 
-    mainL = mainL*0.0254*12;
-    lateralQ = lateralQ/1000;
-    lateralD=lateralD/1000;//*0.0254; //cout << "lateralD :" << lateralD << endl;
-    notsubMainD=notsubMainD/1000;
-    lateralL=lateralL*0.0254*12;
-    mainD = mainD/1000;//*0.0254;
-    var lateralV = lateralQ*4/(3.14*lateralD*lateralD);
-    var F1 = 0.63837*Math.pow(orificeN, -1.8916) + 0.35929;
-    var hf = 10.77*lateralL*(Math.pow((lateralQ/C),1.852))*Math.pow(lateralD,-4.865);
-    //console.log("lateralQ :" +lateralQ);
-    var mainV = lateralQ*lateralN*4/(3.14*mainD*mainD);
-    var mainQ = lateralQ*lateralN*1000*60;  // lpm
-    var notsubMainQ = hi*2*wi*Math.floor(12/5.5)*orificeQ/(60);  //lpm
-    var notsubMainV = notsubMainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
-    console.log("notsubMainQ: "+notsubMainQ);
-    console.log("mainQ (lpm):" + mainQ);
+        var smallD = lateralD-0.001;
+        /*
+        var squareS=0;
+        for(var i=1; i<=orificeN; i++){
+            squareS=squareS+Math.pow(i,1.852);
+        }
+        var F2=squareS/Math.pow(orificeN,2.852);
+        //console.log("F2 :" + F2);
 
-    var smallD = lateralD-0.001;
+        var F3 = Math.pow((1.852+1),-1) + Math.pow(2*orificeN,-1) + Math.pow(1.852-1,0.5)/(6*Math.pow(orificeN,2));
+        //console.log("F3 :" + F3);
 
-    var squareS=0;
-    for(var i=1; i<=orificeN; i++){
-        squareS=squareS+Math.pow(i,1.852);
+        var temp1 = Math.max(F1, F2);
+        temp1 = Math.max(temp1, F3);
+        */
+        var  k = 0.056*(Math.pow(lateralD/smallD,17.83)-1);
+        var hm =  k*(Math.pow(lateralV,2))/(2*g);
+
+
+        var pressureChange = (hf+hm*orificeN)*g*rho*0.000145;
+        var kineticH = Math.pow(mainV,2)/(2*g);
+        var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
+        //console.log("notsubMainVloss: "+notsubMainVloss);
+        //console.log("change in pressure caused in lateral (psi): "+ pressureChange);
+        //console.log("kineticH :" + kineticH);
+        var mainVloss = lateralQ*4/(3.14*mainD*mainD);
+
+        if(op<=wi){
+            var sectionWidth=op;
+            var n28 = Math.floor(wi/sectionWidth);
+            var kineticT=0;
+            var tempPX=0;
+            var xloss=0;
+            var maxXloss=0;
+            var kinetich=0;
+            var yloss=0;
+            var tempPY=0;
+            var initialMainV=mainV;
+            for(var k=0; k<n28; k++){
+                kineticT = Math.pow(notsubMainV,2)/(2*g);
+                tempPX= kineticT*rho*g*0.000145;
+                xloss+=tempPX
+                maxXloss = Math.max(maxXloss, xloss);
+                kineticH=0;
+                yloss=0;
+                tempPY=0;
+                mainV=initialMainV;
+                for(var i=0; i<height; i++){
+                    kineticH= Math.pow(mainV,2)/(2*g);
+                    yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+                    tempPY=yloss*rho*g*0.000145;
+                            //console.log(i+':'+tempPY+','+mainV);
+                    mainV-=mainVloss;
+                    maxYloss = Math.max(maxYloss, tempPY);
+                }
+                notsubMainV-=notsubMainVloss;
+            }
+        }
+
+        console.log("pressurechange "+op+" : "+pressureChange);
+
+
     }
-    var F2=squareS/Math.pow(orificeN,2.852);
-    //console.log("F2 :" + F2);
-
-    var F3 = Math.pow((1.852+1),-1) + Math.pow(2*orificeN,-1) + Math.pow(1.852-1,0.5)/(6*Math.pow(orificeN,2));
-    //console.log("F3 :" + F3);
-
-    var temp1 = Math.max(F1, F2);
-    temp1 = Math.max(temp1, F3);
-
-    var  k = 0.056*(Math.pow(lateralD/smallD,17.83)-1);
-    var hm =  k*(Math.pow(lateralV,2))/(2*g);
-
-    var pressureChange = (hf+hm*orificeN)*g*rho*0.000145;
     var kineticH = Math.pow(mainV,2)/(2*g);
     var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
-    console.log("notsubMainVloss: "+notsubMainVloss);
-    console.log("change in pressure caused in lateral (psi): "+ pressureChange);
+    //console.log("notsubMainVloss: "+notsubMainVloss);
+    //console.log("change in pressure caused in lateral (psi): "+ pressureChange);
     //console.log("kineticH :" + kineticH);
     var mainVloss = lateralQ*4/(3.14*mainD*mainD);
 
