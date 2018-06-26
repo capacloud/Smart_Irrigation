@@ -56,12 +56,21 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var g=10, rho=1000, C=150;
     //var walls=1;
 
+    
+    var sX = 10;
+    var sY = 100;
+    var coeff = 100000;
+    var maxValue = 0;
+    var useSectionwidth = 0;
+    //console.log("enter for");
 
     for(var op=0; op<1000; op++){
+        //console.log("op is "+op);
         //lateralL=40;
         lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2, soure=source2;
         wi = lateralL, hi = mainL;
         lateralL=op;
+        var height=hi*2;
         var notsubMainD=notsubMain;
         var orificeN = Math.floor(lateralL*12/5.5);
         var lateralQ = orificeN*orificeQ/(60*60);
@@ -113,17 +122,19 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
         //console.log("kineticH :" + kineticH);
         var mainVloss = lateralQ*4/(3.14*mainD*mainD);
 
-        if(op<=wi){
+        if(op<=wi&&op!=0){
             var sectionWidth=op;
-            var n28 = Math.floor(wi/sectionWidth);
+            var n28 = Math.ceil(wi/sectionWidth);
             var kineticT=0;
             var tempPX=0;
             var xloss=0;
             var maxXloss=0;
+            var maxYloss=0;
             var kinetich=0;
             var yloss=0;
             var tempPY=0;
             var initialMainV=mainV;
+            var sectionCost =0;
             for(var k=0; k<n28; k++){
                 kineticT = Math.pow(notsubMainV,2)/(2*g);
                 tempPX= kineticT*rho*g*0.000145;
@@ -133,6 +144,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
                 yloss=0;
                 tempPY=0;
                 mainV=initialMainV;
+                sectionCost+=10;
                 for(var i=0; i<height; i++){
                     kineticH= Math.pow(mainV,2)/(2*g);
                     yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
@@ -143,12 +155,26 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
                 }
                 notsubMainV-=notsubMainVloss;
             }
+            var maxPressureloss = maxXloss+maxYloss+pressureChange;
+            var cValue = coeff*Math.exp(-((Math.pow(maxPressureloss,2)/(2*Math.pow(sX,2)))+((Math.pow(sectionCost,2))/(2*Math.pow(sY,2)))));
+            //maxValue = Math.max(maxValue,cValue);
+            if(maxValue<cValue){
+                maxValue=cValue;
+                useSectionwidth = sectionWidth;
+
+            }
+            console.log("pressurechange "+op+" : "+pressureChange);
+            console.log("netpressurechange "+op+" : "+maxPressureloss);
+            console.log("sectionCost "+op+" : "+sectionCost);
+            console.log("cValue "+op+" : "+cValue);
+            console.log("section width to use: "+useSectionwidth);
         }
 
-        console.log("pressurechange "+op+" : "+pressureChange);
 
 
     }
+
+
     var kineticH = Math.pow(mainV,2)/(2*g);
     var notsubMainVloss = mainQ*4/(60*1000*3.14*notsubMainD*notsubMainD);
     //console.log("notsubMainVloss: "+notsubMainVloss);
