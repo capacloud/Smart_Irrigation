@@ -45,7 +45,7 @@
 		}
 
 
-		function main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow, notsubMainV,notsubMainVloss, source )
+		function main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow, notsubMainV,notsubMainVloss, source, sectionWidth1)
 		{
 			if (!mxClient.isBrowserSupported())
 			{
@@ -108,10 +108,12 @@
 					var maxpressureChange=0;
 					var maxXdim=0;
 					var maxYdim=0;
-                    var sectionWidth=170;
+                    var sectionWidth=sectionWidth1;
 					//console.log(width+","+height);
 
                     var n28 = Math.floor(wi/sectionWidth);
+					console.log("wi :"+wi);
+					console.log("sectionWidth :"+sectionWidth);
 					console.log('n28 is: '+n28);
 					//n28 = 3;
                     var tempMain=v1;
@@ -169,7 +171,8 @@
                         graph.insertEdge(parent, null, '',prevMain, tempMain);
                         prevSub = tempMain;
                         prevMain = tempMain;
-                        xMain+=3400;
+						//console.log("xemit is :"+xEmit);
+                        //xMain+=3400;
 						kineticH=0;
 						yloss=0;
 						tempPY=0;
@@ -215,8 +218,10 @@
     							}
     							prevEmit= tempEmit;
     							xEmit+= 40;
+								//
     							//console.log(i+j);
     						}
+							console.log("xEmit :"+xEmit);
 
 
 
@@ -232,7 +237,10 @@
 						notsubMainV-=notsubMainVloss;
 						maxXloss = Math.max(maxXloss, xloss);
 						//tempLastMain = graph.insertVertex(parent, null, xloss, xMain-350, yMain, 200, 20, 'fillColor=green');
-						xSub = xMain-300;
+						console.log("xMain :"+xMain);
+						console.log("xEmit :"+xEmit);
+						xMain=xEmit+300
+						xSub = xMain;
 						ySub = yMain + 30;
 						//xMain+=3000;
 						kineticH=0;
@@ -265,6 +273,125 @@
 
                     }
 
+					if(wi%sectionWidth>0){
+						pvcPipe1+=wi%sectionWidth;
+						pvcT+=1;
+						pvcReducer+=1;
+						flushValve+=1;
+						//pvcControlValve+=2;
+
+						kineticT = Math.pow(notsubMainV,2)/(2*g);
+						//notsubMainV-=notsubMainVloss;
+						tempPX= kineticT*rho*g*0.000145;
+						xloss+=tempPX
+						maxXloss = Math.max(maxXloss, xloss);
+						tempMain = graph.insertVertex(parent, null, xloss, xMain, yMain, 200, 20, 'fillColor=green');
+                        xSub = xMain;
+                        ySub = yMain + 30;
+                        graph.insertEdge(parent, null, '',prevMain, tempMain);
+                        prevSub = tempMain;
+                        prevMain = tempMain;
+						//console.log("xemit is :"+xEmit);
+                        //xMain+=3400;
+						kineticH=0;
+						yloss=0;
+						tempPY=0;
+						mainV=initialMainV;
+						//maxXdim = Math.max(maxXdim, xMain);
+                        for(var i=0; i<height; i++){
+							pvcPipe2+=0.5;
+							lateralPipe+=sectionWidth;
+							startConnector+=1;
+							grommet+=1;
+							inlineValve+=1;
+    			            kineticH= Math.pow(mainV,2)/(2*g);
+    			            yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)
+    			            tempPY=yloss*rho*g*0.000145;
+    								//console.log(i+':'+tempPY+','+mainV);
+    			            mainV-=mainVloss;
+							maxYloss = Math.max(maxYloss, tempPY);
+    						tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub,160,  20, 'fillColor=white')
+    						xEmit= xSub+200;
+    						yEmit= ySub;
+    						graph.insertEdge(parent, null, '', prevSub, tempSub);
+                            if(newlastArr.length>0){
+                                //console.log("si singnore");
+                                //console.log("");
+                                graph.insertEdge(parent, null, '', newlastArr[i], tempSub);
+                                graph.insertEdge(parent,null,'',tempSub,newlastArr[i]);
+                            }
+    						prevEmit= tempSub;
+    						prevSub= tempSub;
+    						ySub+= 54;
+
+    						for(var j=0; j<(Math.floor((wi%sectionWidth)*12/5.5)); j++){
+								emitter+=1;
+								if(j==(Math.floor((wi%sectionWidth)*12/5.5))-1){
+									maxpressureChange=Math.max(pressureChange, maxpressureChange);
+    								tempEmit= graph.insertVertex(parent, null, pressureChange, xEmit, yEmit, 200, 20, 'fillColor=white');
+    								graph.insertEdge(parent, null, '', prevEmit, tempEmit);
+									lastArr.push(tempEmit);
+    							}
+    							else {
+    								tempEmit= graph.insertVertex(parent, null, '' + j, xEmit, yEmit, 20, 20, 'fillColor=lightblue');
+    								graph.insertEdge(parent, null, '', prevEmit, tempEmit);
+    							}
+    							prevEmit= tempEmit;
+    							xEmit+= 40;
+								//
+    							//console.log(i+j);
+    						}
+							console.log("xEmit :"+xEmit);
+
+
+
+    						//xSub+= 24;
+    					}
+						console.log("maxXdim :"+xEmit);
+						maxXdim=Math.max(maxXdim,xEmit);
+						maxYdim=Math.max(maxYdim, yEmit);
+						kineticT = Math.pow(notsubMainV,2)/(2*g);
+						//notsubMainV-=notsubMainVloss;
+						tempPX= kineticT*rho*g*0.000145;
+						xloss+=tempPX
+						notsubMainV-=notsubMainVloss;
+						maxXloss = Math.max(maxXloss, xloss);
+						//tempLastMain = graph.insertVertex(parent, null, xloss, xMain-350, yMain, 200, 20, 'fillColor=green');
+						console.log("xMain :"+xMain);
+						console.log("xEmit :"+xEmit);
+						xMain=xEmit+300
+						xSub = xMain;
+						ySub = yMain + 30;
+						//xMain+=3000;
+						kineticH=0;
+						yloss=0;
+						tempPY=0;
+						mainV=initialMainV;
+						//graph.insertEdge(parent, null, '',prevMain, tempLastMain);
+
+						/*for(var i=0;i<lastArr.length; i++){
+							pvcPipe2+=0.5;
+							startConnector+=1;
+							grommet+=1;
+							inlineValve+=1;
+							kineticH= Math.pow(mainV,2)/(2*g);
+    			            yloss=yloss+kineticH-6*0.0254;  //6 inch pocket (rho*g*h)
+    			            tempPY=yloss*rho*g*0.000145;
+    								//console.log(i+':'+tempPY+','+mainV);
+    			            mainV-=mainVloss;
+							maxYloss = Math.max(maxYloss, tempPY);
+							tempSub= graph.insertVertex(parent, null, tempPY, xSub, ySub,160,  20, 'fillColor=white');
+							graph.insertEdge(parent, null, '', tempSub, lastArr[i]);
+							ySub+= 54;
+							if(i==0){
+								graph.insertEdge(parent, null, '', tempLastMain, tempSub);
+							}
+						}*/
+						//graph.insertEdge(parent, null,'',tempLastMain,lastArr[0]);
+                        newlastArr=lastArr;
+                        lastArr=[];
+					}
+
 
 					width=Math.floor((wi%sectionWidth)*12/5.5); //taking into account 5.5inch x 6 inch pockets
 					console.log("width is: "+width);
@@ -285,7 +412,7 @@
 	                        graph.insertEdge(parent, null, '',prevMain, tempMain);
 	                        prevSub = tempMain;
 	                        prevMain = tempMain;
-	                        xMain+=3400;
+	                        //xMain+=3400;
 							kineticH=0;
 							yloss=0;
 							tempPY=0;
@@ -661,10 +788,10 @@
 <script>
 	function second(container){
     //lateralD = inch, lateralL=feet, orificeQ=lph, mainL=feet, mainD=inch
-		var pressureChange='<%= pressureChange %>', wi='<%= width %>', hi='<%= height %>', mainV='<%= mainV %>', mainVloss='<%= mainVloss %>',walls='<%= walls %>', wallType='<%= wallType %>', notsubMain='<%= notsubMainD %>',notsubMainV='<%= notsubMainV %>',notsubMainVloss='<%= notsubMainVloss %>', mainD='<%= mainD %>', lateralD='<%= lateralD %>', eFlow='<%= eFlow %>', source='<%= source %>';
+		var pressureChange='<%= pressureChange %>', wi='<%= width %>', hi='<%= height %>', mainV='<%= mainV %>', mainVloss='<%= mainVloss %>',walls='<%= walls %>', wallType='<%= wallType %>', notsubMain='<%= notsubMainD %>',notsubMainV='<%= notsubMainV %>',notsubMainVloss='<%= notsubMainVloss %>', mainD='<%= mainD %>', lateralD='<%= lateralD %>', eFlow='<%= eFlow %>', source='<%= source %>',sectionWidth='<%= sectionWidth %>';
         var nameP='<%= nameP %>', nameMPi='<%= nameMPi %>', nameLPi='<%= nameLPi %>';
         console.log(nameP+','+nameMPi+','+nameLPi);
-        return main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow,notsubMainV,notsubMainVloss,source);
+        return main(container, pressureChange, wi, hi, mainV, mainVloss, walls, lateralD, mainD, notsubMain, wallType, eFlow,notsubMainV,notsubMainVloss,source,sectionWidth);
 
 	}
 </script>

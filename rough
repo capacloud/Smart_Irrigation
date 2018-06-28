@@ -1,2 +1,6 @@
 value/40 = quotient
-value/floor(quotient) =  
+value/floor(quotient) =
+
+for(){
+
+}
