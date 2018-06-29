@@ -58,8 +58,8 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 
     for(var cls=1; cls<1000; cls++){
         width2 = cls;
-        var sX = 10;
-        var sY = 100;
+        var sX = 60;
+        var sY = 1000;
         var coeff = 100000;
         var maxValue = 0;
         var useSectionwidth = 0;
@@ -145,7 +145,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
                     yloss=0;
                     tempPY=0;
                     mainV=initialMainV;
-                    sectionCost+=10;
+                    sectionCost+=10*hi;
                     for(var i=0; i<height; i++){
                         kineticH= Math.pow(mainV,2)/(2*g);
                         yloss=yloss+kineticH-6*0.0254;  //6 inch pocket height (rho*g*h)

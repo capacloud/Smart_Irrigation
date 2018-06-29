@@ -24,7 +24,7 @@ app.use(express.static('htmlFiles'))    //try to improve??
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res){
-    res.sendFile(__dirname + '/htmlFiles/indexB.html');
+    res.sendFile(__dirname + '/htmlFiles/indexB1.html');
 });
 
 app.get('/graph', function(req, res){
@@ -59,7 +59,8 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 
     //for(var cls=1; cls<100; cls++){
         //width2 = cls*10;
-    var sX = 10;
+    console.log("emitter flow: "+eFlow2);
+    var sX = 60;
     var sY = 100;
     var coeff = 100000;
     var maxValue = 0;
