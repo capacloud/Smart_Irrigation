@@ -59,7 +59,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
 
     //for(var cls=1; cls<100; cls++){
         //width2 = cls*10;
-    console.log("emitter flow: "+eFlow2);
+    //console.log("emitter flow: "+eFlow2);
     var sX = 60;
     var sY = 100;
     var coeff = 100000;
@@ -183,7 +183,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     console.log("section width to use for "+width2+" : "+useSectionwidth+" mod is "+(width2*10)%useSectionwidth);
     //}
 
-    lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2, soure=source2;
+    lateralD=lateralD2, lateralL=width2, orificeQ=eFlow2, mainL=height2, mainD=mainD2, walls=walls2, wallType=wallType2, notsubMain=notsubMain2, source=source2;
     wi = lateralL, hi = mainL;
     lateralL=useSectionwidth;
     var height=hi*2;
