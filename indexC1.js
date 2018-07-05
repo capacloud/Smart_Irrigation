@@ -27,9 +27,9 @@ app.get('/', function(req, res){
     res.sendFile(__dirname + '/htmlFiles/indexC1.html');
 });
 
-/*
+
 app.get('/graph1', function(req, res){
-    res.render('appB1',{
+    res.render('appC2',{
         width:width1,
         height:height1,
         nameP:nameP1,
@@ -46,10 +46,11 @@ app.get('/graph1', function(req, res){
         mainD:mainD1,
         lateralD:lateralD1,
         eFlow:eFlow1,
-        source:source1
+        source:source1,
+        sectionWidth:sectionWidth1
     });
 });
-*/
+
 app.get('/graph2', function(req, res){
     res.render('appB1',{
         width:width1,
@@ -189,6 +190,13 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
         console.log("Lateral Pipe :" +nameLPi);
         console.log("Pipe dia :" + temp1);
 
+        //notsubMainD=0;
+        notsubMainV=0;
+        notsubMainVloss=0;
+        source2="TL";
+        //sectionWidth
+
+
         mainD1=mainD2;
         lateralD1=lateralD2;
         width1=width2;
@@ -206,7 +214,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
         notsubMainV1=notsubMainV;
         notsubMainVloss1=notsubMainVloss;
         source1=source2;
-
+        sectionWidth1=useSectionwidth;
         //console.log("pressureChange :"+pressureChange);
         //console.log("mainV :" + mainV);
         //console.log("mainVloss :"+mainVloss);
