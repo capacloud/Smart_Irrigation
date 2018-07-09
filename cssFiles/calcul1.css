@@ -4,7 +4,10 @@
 }
 
 body{
-    background-color: rgba(60,60,60,0.7);
+    /*background-color: rgba(60,60,60,0.7);*/
+    background-image: url("http://localhost:3000/o-VERTICAL-GARDEN-facebook.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 label{

@@ -56,7 +56,7 @@ function second(mainD2, lateralD2, width2, height2, eFlow2,walls2, wallType2, no
     var g=10, rho=1000, C=150;
     //var walls=1;
 
-    for(var cls=1; cls<1000; cls++){
+    for(var cls=1; cls<200; cls++){
         width2 = cls;
         var sX = 60;
         var sY = 1000;
