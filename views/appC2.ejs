@@ -9,6 +9,32 @@
 	<script type="text/javascript" src="../src/js/mxClient.js"></script>
 
 	<script type="text/javascript">
+
+	function download(filename, text) {
+	  var element = document.createElement('a');
+	  var pnc = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+	  window.open(pnc);
+	  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+	  element.setAttribute('download', filename);
+
+	  element.style.display = 'none';
+	  document.body.appendChild(element);
+
+	  element.click();
+
+	  document.body.removeChild(element);
+	}
+
+	function callThis(format) {
+		var c = document.getElementById("canvas1");
+		//c.width = document.getElementsByTagName("svg")[0].getBoundingClientRect().width;
+
+		var t22 = (new XMLSerializer).serializeToString(document.getElementsByTagName("svg")[0]);
+		console.log(t22);
+		download("somename.png",t22);
+		//canvg(c, t22);
+	}
+
 		var rowsCSV=[];
 		var csvContent="data:text/csv;charset=utf-8,"
 
@@ -113,7 +139,7 @@
 
 						lateralPipe+=0.5;
 						elbow+=1;
-						lateralPipe+=wi;
+						lateralPipe+=parseInt(wi);
 						inlineValve+=1;
 
                         tempSub = graph.insertVertex(parent, null, tempPY, xSub, ySub, 200, 20, 'fillColor=gray');
@@ -161,7 +187,7 @@
 						elbow+=1;
 						lateralPipe+=0.5;
 						inlineValve+=1;
-						lateralPipe+=wi;
+						lateralPipe+=parseInt(wi);
 
                         tempSub=graph.insertVertex(parent, null, tempPY, xSub, ySub, 200, 20, 'fillColor=gray');
                         graph.insertEdge(parent, null, '', prevSub, tempSub);
@@ -711,8 +737,18 @@
 
 <body onload="second(document.getElementById('graphContainer'))">
 
+
+
 	<div id="graphContainer"
 		style="position:relative;overflow:hidden;width:5000px;height:5000px;cursor:default;">
+		<button id="details">Save PNG</button>
+
+		<script>
+		document.getElementById("details").onclick = function(){
+			//modal.style.display="block";
+			callThis('png');
+		}
+		</script>
 	</div>
 </body>
 </html>
